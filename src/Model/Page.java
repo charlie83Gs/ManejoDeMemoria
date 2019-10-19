@@ -10,5 +10,14 @@ package Model;
  * @author curso
  */
 public class Page {
+    private Process owner;
+    private int logicalPosition;
+    private int physicalPosition;
+
+    public Page(Process owner, int logicalPosition, int physicalPosition) {
+        this.owner = owner;
+        this.logicalPosition = logicalPosition;
+        this.physicalPosition = physicalPosition;
+    }
     
 }

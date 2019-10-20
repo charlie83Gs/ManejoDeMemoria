@@ -10,6 +10,7 @@ import Model.FetchList;
 import Model.MemorySwaper;
 import Model.Page;
 import Model.PageProfile;
+import Model.PlacementPolicyType;
 import Model.Process;
 import Model.Simulation;
 import Model.SimulationBuilder;
@@ -51,4 +52,38 @@ public class TestSimulation {
         
         System.out.println("Finished swap test ");
     }
+    
+    public static void TestTimeStep(int processesAmount){
+        Process[] process = new Process[processesAmount];
+        int SIM = 15000;
+        PageProfile profile = new PageProfile(64);
+        
+        SimulationBuilder simBuilder =new SimulationBuilder();
+        simBuilder.setProfile(profile);
+        simBuilder.setMemory(64000);
+        simBuilder.setStore(128000);
+        simBuilder.setPlacementPolicy(PlacementPolicyType.NEXT_AVAILLABLE);
+
+        Simulation sim = simBuilder.getResult();
+        
+        for (int i=0; i<process.length; i++) 
+        { 
+            process[i] = new Process(i,FetchList.CreateRandomFetchList(2000, PAGES),PAGES,2,sim.getStore());
+            sim.addProcess(process[i]);
+        }
+        
+        
+        //simulate SIM times steps swaps
+        Random r=new Random();
+        while(SIM-- > 0){
+            sim.simulate(r.nextInt(processesAmount));
+        }   
+
+        
+        
+        
+        System.out.println("Finished step test ");
+    }
+    
+    
 }

@@ -7,8 +7,9 @@ package Model;
 
 /**
  *
- * @author curso
+ * @author Charlie
  */
-public interface PlacementPolicy {
-    public int getNext(Simulation sim);
+public enum PlacementPolicyType {
+    FIRST_AVAILABLE,
+    NEXT_AVAILLABLE
 }

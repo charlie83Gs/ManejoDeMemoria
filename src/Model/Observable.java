@@ -7,8 +7,9 @@ package Model;
 
 /**
  *
- * @author curso
+ * @author Charlie
  */
-public interface PlacementPolicy {
-    public int getNext(Simulation sim);
+public interface Observable<T> {
+    public void subscribe(Observer<T> newObserver);
+    public void notifyAllObservers(T object);
 }

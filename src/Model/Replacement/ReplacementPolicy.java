@@ -3,12 +3,15 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package Model;
+package Model.Replacement;
+
+import Model.MainMemory;
 
 /**
  *
- * @author curso
+ * @author Charlie
  */
-public interface PlacementPolicy {
-    public int getNext(Simulation sim);
+public interface ReplacementPolicy {
+    public int fetch(MainMemory men);
+    
 }

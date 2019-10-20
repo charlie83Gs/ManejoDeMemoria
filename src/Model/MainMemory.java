@@ -5,19 +5,22 @@
  */
 package Model;
 
+import java.util.ArrayList;
+
 /**
  *
  * @author Charlie
  */
-public class MainMemory implements Writable{
+public class MainMemory implements Writable , Observable<Page>{
     private int size;    
     private Page[] pages;
     private PageProfile profile;
-
+    private ArrayList<Observer<Page>> observers;
     public MainMemory(int size, PageProfile profile) {
         this.size = size;
         this.profile = profile;
         this.pages = new Page[Math.abs(size/profile.getSize())];
+        observers = new ArrayList<>();
     }
 
     
@@ -41,10 +44,13 @@ public class MainMemory implements Writable{
     @Override
     public void setPage(int index, Page page) {
         pages[index] = page;
+        //send a signal that this page was modified
+        notifyAllObservers(page);
     }
     
     public int getAvailable(){
-        return getLength(pages);
+        //all pages - ocuppied pages
+        return this.pages.length - getLength(pages);
     }
     
     //count not null method from 
@@ -56,5 +62,17 @@ public class MainMemory implements Writable{
                 ++count;
     return count;
 }
-    
+ 
+    @Override
+    public void subscribe(Observer<Page> newObserver) {
+        observers.add(newObserver);
+    }
+
+    @Override
+    public void notifyAllObservers(Page page) {
+        for(Observer<Page> observer : observers){
+            observer.notify(page);
+        }
+    }
+   
 }

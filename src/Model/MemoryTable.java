@@ -73,4 +73,7 @@ public class MemoryTable {
         frame.visit(Clock.getInstance().getTime());
     }
     
+    public boolean isOnMemory(Page page){
+        return frames.get(page).isOnMemory();
+    }
 }

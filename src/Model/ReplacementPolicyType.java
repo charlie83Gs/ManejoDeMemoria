@@ -7,8 +7,12 @@ package Model;
 
 /**
  *
- * @author curso
+ * @author Charlie
  */
-public interface PlacementPolicy {
-    public int getNext(Simulation sim);
+public enum ReplacementPolicyType {
+    LRU
+    , FIFO
+    , LFU
+    , MRU
+    , SECOND_CHANCE
 }

@@ -15,9 +15,9 @@ public class FetchList {
     private int[] usage;
     private int actual;
 
-    public FetchList(int[] usage, int actual) {
+    public FetchList(int[] usage) {
         this.usage = usage;
-        this.actual = actual;
+        this.actual = 0;
     }
     
     /**
@@ -30,6 +30,10 @@ public class FetchList {
             return -1;
         
         return usage[actual];
+    }
+    
+    public boolean isFinished(){
+        return usage.length <= actual;
     }
     /**
      * 
@@ -47,7 +51,7 @@ public class FetchList {
            //System.out.println(fetches[i]); // printing each array element
         }
         
-        FetchList newlist = new FetchList(fetches, size);
+        FetchList newlist = new FetchList(fetches);
         
         
         return newlist;

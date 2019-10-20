@@ -11,9 +11,21 @@ package Model;
  */
 public class NextAvailable implements PlacementPolicy {
 
+    int pointer = 0;
+    
+
     @Override
-    public Page getNext() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public int getNext(Simulation sim) {
+        MainMemory memory = sim.getMemory();
+        while(memory.getAvailable() > 0){
+            //if page slot is empty return it's index
+            if(memory.getPage(pointer) == null) return pointer;
+            
+            //go to next page
+            pointer = (pointer + 1);
+        }
+        
+        return -1;
     }
     
 }

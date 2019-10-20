@@ -31,6 +31,10 @@ public class Process {
         this.memoryTable = new MemoryTable(this.pages);
     }
     
+    public boolean isOnMemory(Page page){
+        return memoryTable.isOnMemory(page);
+    }
+    
     public Page getPage(int index){
         return pages[index];
     }
@@ -50,6 +54,14 @@ public class Process {
     
     public void pageStore(Page page){
         memoryTable.store(page);
+    }
+    
+    public int getNext(){
+        return fetchlist.getNext();
+    }
+    
+    public boolean hasFinished(){
+        return fetchlist.isFinished();
     }
     
 }

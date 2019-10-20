@@ -9,12 +9,16 @@ package Main;
  *
  * @author Charlie
  */
+import Model.Clock;
 import processing.core.PApplet;
 
 public class ManejoDeMemoria extends PApplet {
     
     public static void main(String[] args){
+        TestSimulation.TestTimeStep(10);
         PApplet.main("Main.ManejoDeMemoria");
+          
+        
     }
     
     public void settings(){
@@ -29,5 +33,7 @@ public class ManejoDeMemoria extends PApplet {
     @Override
     public void draw() {
         line(mouseX, mouseY, width / 2, height / 2);
+        
+        text("Simlation cicle: " + Clock.getInstance().getTime(), 20, 20);
     }
 }

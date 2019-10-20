@@ -10,11 +10,11 @@
 ### Rolando Moya Solano
 
 
-#Proposito
+# Proposito
 Este repositorio fue creado para trabajar el proyecto de sistemas operativos. Para un mejor resultado se recomienda utilizar una rama por caracteristica 
 y que los miembros siempre trabajen en ramas distintas.
 
-#Como utilizar
+# Como utilizar
 <ul>
 <li>Clonar el contenido de este repositorio</li>
 <li>Abrir el proyecto clonado desde netbeans</li>

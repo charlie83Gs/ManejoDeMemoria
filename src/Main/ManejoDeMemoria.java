@@ -14,7 +14,12 @@ import processing.core.PApplet;
 public class ManejoDeMemoria extends PApplet {
     
     public static void main(String[] args){
+        TestSimulation.TestMemorySwap(10);
         PApplet.main("Main.ManejoDeMemoria");
+        
+       
+        
+        
     }
     
     public void settings(){

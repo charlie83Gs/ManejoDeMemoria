@@ -19,5 +19,31 @@ public class Page {
         this.logicalPosition = logicalPosition;
         this.physicalPosition = physicalPosition;
     }
+
+    public Process getOwner() {
+        return owner;
+    }
+
+    public void setOwner(Process owner) {
+        this.owner = owner;
+    }
+
+    public int getLogicalPosition() {
+        return logicalPosition;
+    }
+
+    public void setLogicalPosition(int logicalPosition) {
+        this.logicalPosition = logicalPosition;
+    }
+
+    public int getPhysicalPosition() {
+        return physicalPosition;
+    }
+
+    public void setPhysicalPosition(int physicalPosition) {
+        this.physicalPosition = physicalPosition;
+    }
+    
+    
     
 }

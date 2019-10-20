@@ -5,6 +5,8 @@
  */
 package Model;
 
+import java.util.Random;
+
 /**
  *
  * @author curso
@@ -28,5 +30,26 @@ public class FetchList {
             return -1;
         
         return usage[actual];
+    }
+    /**
+     * 
+     * @param size number of page calls
+     * @param pages amount of process pages
+     * @return 
+     */
+    public static FetchList CreateRandomFetchList(int size,int pages){
+        //random array from 
+        //https://www.tutorialspoint.com/generate-a-random-array-of-integers-in-java
+        Random rd = new Random(); // creating Random object
+        int[] fetches = new int[size];
+        for (int i = 0; i < fetches.length; i++) {
+           fetches[i] = rd.nextInt(pages); // storing random integers in an array
+           //System.out.println(fetches[i]); // printing each array element
+        }
+        
+        FetchList newlist = new FetchList(fetches, size);
+        
+        
+        return newlist;
     }
 }

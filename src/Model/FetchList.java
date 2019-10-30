@@ -56,4 +56,16 @@ public class FetchList {
         
         return newlist;
     }
+
+    @Override
+    public String toString() {
+        String strUsage = "";
+        for(int i: usage){
+            strUsage += "," + i;
+        }
+        
+        return "FetchList{" + "usage=" + strUsage + ", actual=" + actual + '}';
+    }
+    
+    
 }

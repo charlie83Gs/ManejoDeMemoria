@@ -9,15 +9,18 @@ package Main;
  *
  * @author Charlie
  */
+import Model.BackingStore;
 import Model.Clock;
+import Model.FileManager;
+import Model.PageProfile;
 import processing.core.PApplet;
 
 public class ManejoDeMemoria extends PApplet {
     
     public static void main(String[] args){
+        
         TestSimulation.TestTimeStep(10);
         PApplet.main("Main.ManejoDeMemoria");
-          
         
     }
     

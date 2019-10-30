@@ -15,6 +15,7 @@ import Model.Process;
 import Model.Simulation;
 import Model.SimulationBuilder;
 import java.util.Random;
+import org.json.JSONObject;
 
 /**
  *
@@ -69,8 +70,11 @@ public class TestSimulation {
         for (int i=0; i<process.length; i++) 
         { 
             process[i] = new Process(i,FetchList.CreateRandomFetchList(2000, PAGES),PAGES,2,sim.getStore());
+           
+            
             sim.addProcess(process[i]);
         }
+        
         
         
         //simulate SIM times steps swaps

@@ -25,7 +25,6 @@ public class FIFO implements ReplacementPolicy, Observer<Page>{
         
     }
     
-    
     //selectes next replaced memory position
     @Override
     public int fetch(MainMemory men) {

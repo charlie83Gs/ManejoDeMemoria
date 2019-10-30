@@ -16,7 +16,7 @@ public class Process {
     private MemoryTable memoryTable;
     private int priority;
 
-    public Process(int id, FetchList fetchlist, int pages, int priority,BackingStore store) {
+    public Process(int id, FetchList fetchlist, int pages, int prority,BackingStore store) {
         this.id = id;
         this.fetchlist = fetchlist;
         this.pages = new Page[pages];
@@ -63,5 +63,12 @@ public class Process {
     public boolean hasFinished(){
         return fetchlist.isFinished();
     }
+
+    @Override
+    public String toString() {
+        return "Process{" + "id=" + id + ", fetchlist=" + fetchlist + ", pages=" + pages + ", memoryTable=" + memoryTable + ", priority=" + priority + '}';
+    }
+    
+    
     
 }

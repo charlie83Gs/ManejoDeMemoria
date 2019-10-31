@@ -6,12 +6,13 @@
 package Model.Replacement;
 
 import Model.MainMemory;
+import Model.Process;
 
 /**
  *
  * @author Charlie
  */
 public interface ReplacementPolicy {
-    public int fetch(MainMemory men);
+    public int fetch(MainMemory men, Process proc);
     
 }

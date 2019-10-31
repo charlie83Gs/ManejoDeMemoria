@@ -9,6 +9,7 @@ import Model.MainMemory;
 import Model.Observer;
 import Model.Page;
 import Model.Simulation;
+import Model.Process;
 import java.util.ArrayDeque;
 import java.util.Arrays;
 import java.util.Queue;
@@ -27,7 +28,7 @@ public class FIFO implements ReplacementPolicy, Observer<Page>{
     
     //selectes next replaced memory position
     @Override
-    public int fetch(MainMemory men) {
+    public int fetch(MainMemory men, Process proc) {
         MainMemory memory = men;
         Page nextPage = pages.remove();
         //ineficient search for index
@@ -39,6 +40,7 @@ public class FIFO implements ReplacementPolicy, Observer<Page>{
     public void notify(Page object) {
         //a page has been loaded to memory
         pages.add(object);
+        
     }
     
 }

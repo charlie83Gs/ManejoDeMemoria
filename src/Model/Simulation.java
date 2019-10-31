@@ -71,7 +71,7 @@ public class Simulation implements Swapable {
             //if there are not more free pages
             }else{
                 //execute replacement policy
-                int swapedIndex = replacementPolicy.fetch(memory);
+                int swapedIndex = replacementPolicy.fetch(memory, process);
                 //System.out.println("swap "+ swapedIndex + " --- " + page.getPhysicalPosition());
                 MemorySwaper.SwapIn(this, swapedIndex, page.getPhysicalPosition());
             }

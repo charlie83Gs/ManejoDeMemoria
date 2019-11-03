@@ -44,4 +44,10 @@ public class BackingStore implements Writable {
     public boolean readPage(Page page) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
+
+    public Page[] getPages() {
+        return pages;
+    }
+    
+    
 }

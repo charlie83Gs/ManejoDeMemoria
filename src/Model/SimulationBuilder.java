@@ -96,7 +96,7 @@ public class SimulationBuilder {
         ReplacementPolicy replacementPolicyObject = getReplacementPolicy(memoryObject);
         
         
-        return new Simulation(storeObject, memoryObject, placementPolicy,replacementPolicyObject );
+        return new Simulation(storeObject, memoryObject, placementPolicy,replacementPolicyObject,replacementScope);
         
     }
 }

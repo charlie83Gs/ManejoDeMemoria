@@ -43,6 +43,12 @@ public class Page {
     public void setPhysicalPosition(int physicalPosition) {
         this.physicalPosition = physicalPosition;
     }
+
+    @Override
+    public String toString() {
+        return "P" + owner.getId() + " : " + logicalPosition;
+    }
+    
     
     
     

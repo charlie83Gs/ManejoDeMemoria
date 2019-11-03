@@ -16,30 +16,38 @@ public class LocalReplacementFactory extends AbstractReplacementFactory {
 
     @Override
     public ReplacementPolicy getLRU(MainMemory men) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        LocalLRU newPolicy = new LocalLRU();
+        men.subscribeAcces(newPolicy);
+        return newPolicy;
     }
 
     @Override
     public ReplacementPolicy getFIFO(MainMemory men) {
         LocalFiFO newPolicy = new LocalFiFO();
-        men.subscribe(newPolicy);
+        men.subscribeSwap(newPolicy);
         return newPolicy;
         
     }
 
     @Override
     public ReplacementPolicy getLFU(MainMemory men) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        LocalLFU newPolicy = new LocalLFU();
+        men.subscribeAcces(newPolicy);
+        return newPolicy;
     }
 
     @Override
     public ReplacementPolicy getMRU(MainMemory men) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        LocalMRU newPolicy = new LocalMRU();
+        men.subscribeAcces(newPolicy);
+        return newPolicy;
     }
 
     @Override
     public ReplacementPolicy getSecondChance(MainMemory men) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        LocalSecondChance newPolicy = new LocalSecondChance();
+        men.subscribeSwap(newPolicy);
+        return newPolicy;
     }
 
     

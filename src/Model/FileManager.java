@@ -79,7 +79,7 @@ public class FileManager {
                                     new FetchList(usage),
                                     tmp.getInt("pages"),
                                     tmp.getInt("prior"),
-                                    this.store));
+                                    this.store,0));
         }
         return result;
     }

@@ -23,6 +23,7 @@ public class MainMemory implements Writable , Observable<Page>{
         this.size = size;
         this.profile = profile;
         this.pages = new Page[Math.abs(size/profile.getSize())];
+        System.out.println("Total pages: " + Math.abs(size/profile.getSize()));
         swapObservers = new ArrayList<>();
         accesObservers = new ArrayList<>();
     }
@@ -106,8 +107,13 @@ public class MainMemory implements Writable , Observable<Page>{
     @Override
     public boolean readPage(Page page) {
         boolean res = 0 <= Arrays.asList(pages).indexOf(page);
+        //notify a read executed to this page
+        notifyAcess(page);
         //if page is on memory visit it 
-        if(res) page.getOwner().visit(page);
+        if(res){
+            
+            page.getOwner().visit(page);
+        }
         
         return res;
     }
@@ -115,6 +121,7 @@ public class MainMemory implements Writable , Observable<Page>{
     
     public Page getRandomPage(){
         int next = (int)(Math.random() * (pages.length-1));
+        
         return pages[next];
     }
     

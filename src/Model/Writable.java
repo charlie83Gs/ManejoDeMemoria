@@ -12,4 +12,6 @@ package Model;
 public interface Writable {
     public Page getPage(int index);
     public void setPage(int index, Page page);
+    //to simulate page access
+    public boolean readPage(Page page);
 }

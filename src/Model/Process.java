@@ -15,12 +15,14 @@ public class Process {
     private Page[] pages;
     private MemoryTable memoryTable;
     private int priority;
+    int totalPages;
 
-    public Process(int id, FetchList fetchlist, int pages, int prority,BackingStore store) {
+    public Process(int id, FetchList fetchlist, int pages, int priority,BackingStore store, int totalPages) {
         this.id = id;
         this.fetchlist = fetchlist;
         this.pages = new Page[pages];
         this.priority = priority;
+        this.totalPages = totalPages;
         
         
         for (int i = 0; i < this.pages.length; i++) {
@@ -56,6 +58,10 @@ public class Process {
         memoryTable.store(page);
     }
     
+    public void visit(Page page){
+        memoryTable.visit(page);
+    }
+    
     public int getNext(){
         return fetchlist.getNext();
     }
@@ -68,6 +74,20 @@ public class Process {
     public String toString() {
         return "Process{" + "id=" + id + ", fetchlist=" + fetchlist + ", pages=" + pages + ", memoryTable=" + memoryTable + ", priority=" + priority + '}';
     }
+    
+    public int getAvailablePages(){
+        int onMemory = 0;
+        
+        for(Page page : pages){
+            if(memoryTable.isOnMemory(page)) onMemory++;
+        }
+        return totalPages - onMemory;
+    }
+
+    public int getId() {
+        return id;
+    }
+    
     
     
     

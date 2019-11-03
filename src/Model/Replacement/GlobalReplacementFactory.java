@@ -16,29 +16,38 @@ public class GlobalReplacementFactory extends AbstractReplacementFactory {
 
     @Override
     public ReplacementPolicy getLRU(MainMemory men) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        LRU newPolicy = new LRU();
+        men.subscribeAcces(newPolicy);
+        return newPolicy;    
     }
 
     @Override
     public ReplacementPolicy getFIFO(MainMemory men) {
         FIFO newPolicy = new FIFO();
-        men.subscribe(newPolicy);
+        men.subscribeSwap(newPolicy);
         return newPolicy;
     }
 
     @Override
     public ReplacementPolicy getLFU(MainMemory men) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        LFU newPolicy = new LFU();
+        men.subscribeAcces(newPolicy);
+        return newPolicy;
     }
 
     @Override
     public ReplacementPolicy getMRU(MainMemory men) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        MRU newPolicy = new MRU();
+        men.subscribeAcces(newPolicy);
+        return newPolicy;
     }
 
     @Override
     public ReplacementPolicy getSecondChance(MainMemory men) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        SecondChance newPolicy = new SecondChance();
+        men.subscribeSwap(newPolicy);
+        return newPolicy;
+        
     }
 
 

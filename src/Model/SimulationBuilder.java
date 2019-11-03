@@ -65,6 +65,12 @@ public class SimulationBuilder {
             replacementFactory = new LocalReplacementFactory();
         }
     }
+
+    public void setReplacementPolicy(ReplacementPolicyType replacementPolicyType) {
+        this.replacementPolicyType = replacementPolicyType;
+    }
+    
+    
     
     private ReplacementPolicy getReplacementPolicy(MainMemory memory){
         if(replacementPolicyType == ReplacementPolicyType.FIFO){
@@ -90,7 +96,7 @@ public class SimulationBuilder {
         ReplacementPolicy replacementPolicyObject = getReplacementPolicy(memoryObject);
         
         
-        return new Simulation(storeObject, memoryObject, placementPolicy,replacementPolicyObject );
+        return new Simulation(storeObject, memoryObject, placementPolicy,replacementPolicyObject,replacementScope);
         
     }
 }

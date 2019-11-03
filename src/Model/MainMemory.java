@@ -6,6 +6,7 @@
 package Model;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  *
@@ -15,12 +16,16 @@ public class MainMemory implements Writable , Observable<Page>{
     private int size;    
     private Page[] pages;
     private PageProfile profile;
-    private ArrayList<Observer<Page>> observers;
+    private ArrayList<Observer<Page>> swapObservers;    
+    private ArrayList<Observer<Page>> accesObservers;
+
     public MainMemory(int size, PageProfile profile) {
         this.size = size;
         this.profile = profile;
         this.pages = new Page[Math.abs(size/profile.getSize())];
-        observers = new ArrayList<>();
+        System.out.println("Total pages: " + Math.abs(size/profile.getSize()));
+        swapObservers = new ArrayList<>();
+        accesObservers = new ArrayList<>();
     }
 
     
@@ -35,6 +40,8 @@ public class MainMemory implements Writable , Observable<Page>{
     public Page[] getPages() {
         return pages;
     }
+    
+    
 
     @Override
     public Page getPage(int index) {
@@ -45,7 +52,7 @@ public class MainMemory implements Writable , Observable<Page>{
     public void setPage(int index, Page page) {
         pages[index] = page;
         //send a signal that this page was modified
-        notifyAllObservers(page);
+        notifySwap(page);
     }
     
     public int getAvailable(){
@@ -65,14 +72,58 @@ public class MainMemory implements Writable , Observable<Page>{
  
     @Override
     public void subscribe(Observer<Page> newObserver) {
-        observers.add(newObserver);
+        accesObservers.add(newObserver);
     }
+    
+    
+    public void subscribeSwap(Observer<Page> newObserver) {
+        swapObservers.add(newObserver);
+    }
+    
+    public void subscribeAcces(Observer<Page> newObserver) {
+        accesObservers.add(newObserver);
+    }
+
 
     @Override
     public void notifyAllObservers(Page page) {
-        for(Observer<Page> observer : observers){
+        for(Observer<Page> observer : accesObservers){
             observer.notify(page);
         }
     }
+    
+    public void notifyAcess(Page page) {
+        notifyAllObservers(page);
+    }
+    
+    public void notifySwap(Page page) {
+        for(Observer<Page> observer : swapObservers){
+            observer.notify(page);
+        }
+    }
+
+
+    //simply sasys is page is on memory
+    @Override
+    public boolean readPage(Page page) {
+        boolean res = 0 <= Arrays.asList(pages).indexOf(page);
+        //notify a read executed to this page
+        notifyAcess(page);
+        //if page is on memory visit it 
+        if(res){
+            
+            page.getOwner().visit(page);
+        }
+        
+        return res;
+    }
+    
+    
+    public Page getRandomPage(){
+        int next = (int)(Math.random() * (pages.length-1));
+        
+        return pages[next];
+    }
+    
    
 }

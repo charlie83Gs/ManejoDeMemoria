@@ -6,6 +6,7 @@
 package Model;
 
 import Model.Replacement.ReplacementPolicy;
+import Model.Replacement.ReplacementScope;
 import java.util.ArrayList;
 
 /**
@@ -18,14 +19,19 @@ public class Simulation implements Swapable {
     ArrayList<Process> processes;
     PlacementPolicy placementPolicy;
     ReplacementPolicy replacementPolicy;
+    ReplacementScope scope;
+    int pageFaults = 0;    
+    int pageHits = 0;
+
     
 
-    public Simulation(BackingStore store, MainMemory memory, PlacementPolicy placementPolicy, ReplacementPolicy replacementPolicy) {
+    public Simulation(BackingStore store, MainMemory memory, PlacementPolicy placementPolicy, ReplacementPolicy replacementPolicy, ReplacementScope scope) {
         this.store = store;
         this.memory = memory;
         this.processes = new ArrayList<>();
         this.placementPolicy = placementPolicy;
         this.replacementPolicy = replacementPolicy;
+        this.scope = scope;
     }
     
 
@@ -63,24 +69,45 @@ public class Simulation implements Swapable {
             //System.out.println(freeIndex);
             //System.out.println("n " + next);
             //if there are free pages
-            if(freeIndex >= 0){
-                
-                
-                MemorySwaper.SwapIn(this, freeIndex, page.getPhysicalPosition());
-                
-            //if there are not more free pages
-            }else{
-                //execute replacement policy
-                int swapedIndex = replacementPolicy.fetch(memory, process);
-                //System.out.println("swap "+ swapedIndex + " --- " + page.getPhysicalPosition());
-                MemorySwaper.SwapIn(this, swapedIndex, page.getPhysicalPosition());
-            }
             
+            //visit page if posible
+            if(memory.readPage(page) && !(scope == ReplacementScope.LOCAL && process.getAvailablePages() < 1)){
+                pageHits++;
+                //System.out.println("Page hit!!");
+            //page fault
+            }else{
+                 pageFaults++;
+                 //System.out.println(pageFaults);
+                //load page
+                if(freeIndex >= 0){
+
+                    MemorySwaper.SwapIn(this, freeIndex, page.getPhysicalPosition());
+
+                //if there are not more free pages
+                //page swap
+                }else{
+                    //execute replacement policy
+                    int swapedIndex = replacementPolicy.fetch(memory, process);
+                    System.out.println("swap "+ swapedIndex + " --- " + page.getPhysicalPosition());
+                    MemorySwaper.SwapIn(this, swapedIndex, page.getPhysicalPosition());
+                }
+
+               
+            }
             Clock.getInstance().simulate(1);
         }
         
         
     }
+
+    public int getPageFaults() {
+        return pageFaults;
+    }
+
+    public int getPageHits() {
+        return pageHits;
+    }
+    
     
     
 }

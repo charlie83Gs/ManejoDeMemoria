@@ -12,6 +12,8 @@ import Model.Page;
 import Model.PageProfile;
 import Model.PlacementPolicyType;
 import Model.Process;
+import Model.Replacement.ReplacementScope;
+import Model.ReplacementPolicyType;
 import Model.Simulation;
 import Model.SimulationBuilder;
 import java.util.Random;
@@ -22,7 +24,7 @@ import org.json.JSONObject;
  * @author Charlie
  */
 public class TestSimulation {
-    private static int PAGES = 10;
+    private static int PAGES = 20;
     public static void TestMemorySwap(int processesAmount){
         Process[] process = new Process[processesAmount];
         int SIM = 4000;
@@ -37,7 +39,7 @@ public class TestSimulation {
         
         for (int i=0; i<process.length; i++) 
         { 
-            process[i] = new Process(i,FetchList.CreateRandomFetchList(2000, 20),PAGES,2,sim.getStore());
+            process[i] = new Process(i,FetchList.CreateRandomFetchList(2000, 20),PAGES,2,sim.getStore(),10);
         }
             
         //simulate 4000 memory swaps
@@ -54,7 +56,7 @@ public class TestSimulation {
         System.out.println("Finished swap test ");
     }
     
-    public static void TestTimeStep(int processesAmount){
+    public static Simulation TestTimeStep(int processesAmount){
         Process[] process = new Process[processesAmount];
         int SIM = 15000;
         PageProfile profile = new PageProfile(64);
@@ -64,12 +66,14 @@ public class TestSimulation {
         simBuilder.setMemory(64000);
         simBuilder.setStore(128000);
         simBuilder.setPlacementPolicy(PlacementPolicyType.NEXT_AVAILLABLE);
+        simBuilder.setReplacementPolicy(ReplacementPolicyType.SECOND_CHANCE);
+        simBuilder.setReplacementScope(ReplacementScope.LOCAL);
 
         Simulation sim = simBuilder.getResult();
         
         for (int i=0; i<process.length; i++) 
         { 
-            process[i] = new Process(i,FetchList.CreateRandomFetchList(2000, PAGES),PAGES,2,sim.getStore());
+            process[i] = new Process(i,FetchList.CreateRandomFetchList(3000, PAGES),PAGES,2,sim.getStore(),50);
            
             
             sim.addProcess(process[i]);
@@ -85,8 +89,11 @@ public class TestSimulation {
 
         
         
-        
+        System.out.println("Hits: " + sim.getPageHits());
+        System.out.println("Faults: " + sim.getPageFaults());
         System.out.println("Finished step test ");
+        
+        return sim;
     }
     
     

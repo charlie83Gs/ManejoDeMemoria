@@ -33,6 +33,7 @@ public class LRU implements ReplacementPolicy, Observer<Page>{
         return -1;
     }
 
+    //reads page acces
     @Override
     public void notify(Page object) {
         int index = pages.indexOf(object);

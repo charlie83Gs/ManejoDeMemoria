@@ -21,7 +21,10 @@ public class LocalReplacementFactory extends AbstractReplacementFactory {
 
     @Override
     public ReplacementPolicy getFIFO(MainMemory men) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        LocalFiFO newPolicy = new LocalFiFO();
+        men.subscribe(newPolicy);
+        return newPolicy;
+        
     }
 
     @Override

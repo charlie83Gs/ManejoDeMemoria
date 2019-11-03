@@ -56,6 +56,10 @@ public class Process {
         memoryTable.store(page);
     }
     
+    public void visit(Page page){
+        memoryTable.visit(page);
+    }
+    
     public int getNext(){
         return fetchlist.getNext();
     }

@@ -12,6 +12,8 @@ import Model.Page;
 import Model.PageProfile;
 import Model.PlacementPolicyType;
 import Model.Process;
+import Model.Replacement.ReplacementScope;
+import Model.ReplacementPolicyType;
 import Model.Simulation;
 import Model.SimulationBuilder;
 import java.util.Random;
@@ -22,7 +24,7 @@ import org.json.JSONObject;
  * @author Charlie
  */
 public class TestSimulation {
-    private static int PAGES = 10;
+    private static int PAGES = 200;
     public static void TestMemorySwap(int processesAmount){
         Process[] process = new Process[processesAmount];
         int SIM = 4000;
@@ -64,6 +66,8 @@ public class TestSimulation {
         simBuilder.setMemory(64000);
         simBuilder.setStore(128000);
         simBuilder.setPlacementPolicy(PlacementPolicyType.NEXT_AVAILLABLE);
+        simBuilder.setReplacementPolicy(ReplacementPolicyType.FIFO);
+        simBuilder.setReplacementScope(ReplacementScope.LOCAL);
 
         Simulation sim = simBuilder.getResult();
         

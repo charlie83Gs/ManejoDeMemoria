@@ -3,16 +3,13 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/J/Documents/GitHub/ManejoDeMemoria/src/Model/FetchList.java</file>
-            <file>file:/C:/Users/J/Documents/GitHub/ManejoDeMemoria/src/Model/MainMemory.java</file>
             <file>file:/C:/Users/J/Documents/GitHub/ManejoDeMemoria/src/Model/Replacement/ReplacementPolicy.java</file>
-            <file>file:/C:/Users/J/Documents/GitHub/ManejoDeMemoria/src/Model/Replacement/SecondChance.java</file>
-            <file>file:/C:/Users/J/Documents/GitHub/ManejoDeMemoria/src/Model/Process.java</file>
+            <file>file:/C:/Users/J/Documents/GitHub/ManejoDeMemoria/src/Model/BackingStore.java</file>
             <file>file:/C:/Users/J/Documents/GitHub/ManejoDeMemoria/src/Main/TestSimulation.java</file>
+            <file>file:/C:/Users/J/Documents/GitHub/ManejoDeMemoria/src/Model/SimulationBuilder.java</file>
             <file>file:/C:/Users/J/Documents/GitHub/ManejoDeMemoria/src/Main/ManejoDeMemoria.java</file>
-            <file>file:/C:/Users/J/Documents/GitHub/ManejoDeMemoria/src/Model/MemoryTable.java</file>
-            <file>file:/C:/Users/J/Documents/GitHub/ManejoDeMemoria/src/Model/PlacementPolicy.java</file>
-            <file>file:/C:/Users/J/Documents/GitHub/ManejoDeMemoria/src/Model/Replacement/LFU.java</file>
+            <file>file:/C:/Users/J/Documents/GitHub/ManejoDeMemoria/src/Model/Replacement/AbstractReplacementFactory.java</file>
+            <file>file:/C:/Users/J/Documents/GitHub/ManejoDeMemoria/src/Model/PlacementPolicyType.java</file>
             <file>file:/C:/Users/J/Documents/GitHub/ManejoDeMemoria/src/Model/Simulation.java</file>
         </group>
     </open-files>

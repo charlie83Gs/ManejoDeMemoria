@@ -20,6 +20,12 @@ public class BackingStore implements Writable {
         this.profile = profile;
         this.pages = new Page[Math.abs(size/profile.getSize())];
     }
+
+    public int getSize() {
+        return size;
+    }
+    
+    
     
     public void setPage(int index, Page page){
         pages[index] = page;

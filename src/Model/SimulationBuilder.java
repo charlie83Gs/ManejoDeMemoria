@@ -48,6 +48,15 @@ public class SimulationBuilder {
             placementPolicy = new NextAvailable();
         }
     }
+    
+    public PlacementPolicy getPlacementPolicy(PlacementPolicyType type){
+        if(type == PlacementPolicyType.FIRST_AVAILABLE){
+            return new FirstAvailable();
+        }else if(type == PlacementPolicyType.NEXT_AVAILLABLE){
+            return new NextAvailable();
+        }
+        return null;
+    }
 
     public void setStore(int store) {
         this.store = store;
@@ -70,7 +79,7 @@ public class SimulationBuilder {
         this.replacementPolicyType = replacementPolicyType;
     }
     
-    private ReplacementPolicy getReplacementPolicy(MainMemory memory){
+    public ReplacementPolicy getReplacementPolicy(MainMemory memory){
         if(replacementPolicyType == ReplacementPolicyType.FIFO){
             return replacementFactory.getFIFO(memory);
         }else if(replacementPolicyType == ReplacementPolicyType.LFU){

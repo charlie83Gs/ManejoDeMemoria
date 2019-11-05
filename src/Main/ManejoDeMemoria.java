@@ -20,6 +20,7 @@ import Model.Replacement.ReplacementPolicy;
 import Model.Replacement.ReplacementScope;
 import Model.ReplacementPolicyType;
 import Model.Simulation;
+import Model.SimulationBuilder;
 import processing.core.PApplet;
 import processing.event.MouseEvent;
 import g4p_controls.*;
@@ -97,15 +98,31 @@ public class ManejoDeMemoria extends PApplet {
             case "next":
                 sim = TestSimulation.TestTimeStep(sim, sim.getProcesses().size());
                 break;
+            case "Guardar":
+                this.setConfig();
+                break;
+            case "Cancelar":
+                this.window.close();
+                break;
         }
     }
     
+    public void setConfig(){
+        
+        SimulationBuilder simBuilder =new SimulationBuilder();
+        sim.setScope(ReplacementScope.valueOf(RepScopePicker.getSelectedText()));
+        sim.setPlacementPolicy(simBuilder.getPlacementPolicy(PlacementPolicyType.valueOf(PlacementPolicyPicker.getSelectedText())));
+        simBuilder.setReplacementPolicy(ReplacementPolicyType.valueOf(RepPolicyPicker.getSelectedText()));
+        sim.setReplacementPolicy(simBuilder.getReplacementPolicy(sim.getMemory()));
+        
+    }
     
     void createWindows() 
     {
         window = GWindow.getWindow(this, "Help", 500, 50, 477, 538, JAVA2D);
         window.addDrawHandler(this, "config_draw");
         window.setActionOnClose(GWindow.CLOSE_WINDOW);
+        
         G4P.registerSketch(window);
         
         //initialize items
@@ -122,7 +139,8 @@ public class ManejoDeMemoria extends PApplet {
         
         new GLabel(window, pickerX, pickerY,300, 50, "Replacement Scope");
         RepScopePicker = new GDropList(window, pickerX, pickerY+40, pickerWidth, pickerHeight,optionsPerPage);
-        RepScopePicker.setItems(scopeStrings, 0); 
+        RepScopePicker.setItems(scopeStrings, 0);
+        
         
         //replacement policy
         List<String> repPolicyStrings = Stream.of(ReplacementPolicyType.values())
@@ -145,11 +163,16 @@ public class ManejoDeMemoria extends PApplet {
         new GLabel(window, pickerX, pickerY + 150,300, 50, "Degree of multiprograming");
         
         multiprograming = new GSlider(window,pickerX, pickerY + 190,300, 20, 100);
+        
+        new GButton(window, window.width - 160, window.height - 50, 75, 50, "Guardar");
+        new GButton(window, window.width - 75, window.height - 50, 75, 50, "Cancelar");
+        
     }
 
     @Override
     public void draw() {
         background(255,255,255);
+        
         
         displayMemoryArray(sim.getMemory().getPages(),500, 20 + (int)disp);
         displayMemoryArray(sim.getStore().getPages(),600, 20 + (int)disp);

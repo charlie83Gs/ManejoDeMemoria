@@ -34,6 +34,20 @@ public class Simulation implements Swapable {
         this.scope = scope;
     }
 
+    
+    
+    public void setPlacementPolicy(PlacementPolicy placementPolicy) {
+        this.placementPolicy = placementPolicy;
+    }
+
+    public void setReplacementPolicy(ReplacementPolicy replacementPolicy) {
+        this.replacementPolicy = replacementPolicy;
+    }
+
+    public void setScope(ReplacementScope scope) {
+        this.scope = scope;
+    }
+
     public ArrayList<Process> getProcesses() {
         return processes;
     }

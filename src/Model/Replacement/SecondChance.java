@@ -55,8 +55,10 @@ public class SecondChance implements ReplacementPolicy, Observer<Page>{
         //a page has been loaded to memory
         secondChanceFlag.put(object, Boolean.TRUE);
         pages.add(object);
-        
-        
     }
     
+    @Override
+    public String toString() {
+        return "Second Chance";
+    }
 }

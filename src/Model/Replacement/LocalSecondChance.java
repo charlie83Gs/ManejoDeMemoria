@@ -73,5 +73,12 @@ public class LocalSecondChance implements ReplacementPolicy, Observer<Page>{
         
         return queues.get(proc);
     }
+
+    @Override
+    public String toString() {
+        return "Second Chance";
+    }
+    
+    
     
 }

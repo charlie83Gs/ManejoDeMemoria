@@ -44,7 +44,6 @@ public class ManejoDeMemoria extends PApplet {
     
     String processPath, fetchListPath;
     
-    
     GButton configButt,
             processButt,
             fetchListButt,
@@ -56,10 +55,7 @@ public class ManejoDeMemoria extends PApplet {
     
     public static void main(String[] args){       
         PApplet.main("Main.ManejoDeMemoria");
-        
-        
     }
-
 
     public void settings(){
         size(width, height);
@@ -77,16 +73,13 @@ public class ManejoDeMemoria extends PApplet {
             sim.addProcess(p);
         }
         
-        
         stroke(155, 0, 0);
         
         //initialize items
-       
-       
         configButt = new GButton(this, this.width - 75, this.height - 50, 75, 50, "configButt");
         processButt = new GButton(this, 0, this.height - 50, 75, 50, "Process path");
         fetchListButt = new GButton(this, 75, this.height - 50, 75, 50, "Fetch list path");
-        simulateNext = new GButton(this, 350, 300, 50, 100, "next");
+        simulateNext = new GButton(this, 350, this.height - 50, 75, 50, "next");
         
     }
     
@@ -104,14 +97,10 @@ public class ManejoDeMemoria extends PApplet {
             case "next":
                 sim = TestSimulation.TestTimeStep(sim, sim.getProcesses().size());
                 break;
-                
-        
         }
     }
     
-    public void config_draw(PApplet appc, GWinData data){
-        appc.background(255);
-    }
+    
     void createWindows() 
     {
         window = GWindow.getWindow(this, "Help", 500, 50, 477, 538, JAVA2D);
@@ -153,25 +142,22 @@ public class ManejoDeMemoria extends PApplet {
         PlacementPolicyPicker = new GDropList(window, pickerX, pickerY +140, pickerWidth, pickerHeight, optionsPerPage);
         PlacementPolicyPicker.setItems(fetchPolicyStrings, 0); 
         
-        new GLabel(window, pickerX, pickerY + 100,300, 50, "Degree of multiprograming");
+        new GLabel(window, pickerX, pickerY + 150,300, 50, "Degree of multiprograming");
         
-        multiprograming = new GSlider(window,pickerX, pickerY + 200,300, 20, 100);
-        
-        
+        multiprograming = new GSlider(window,pickerX, pickerY + 190,300, 20, 100);
     }
 
     @Override
     public void draw() {
         background(255,255,255);
         
-        
         displayMemoryArray(sim.getMemory().getPages(),500, 20 + (int)disp);
         displayMemoryArray(sim.getStore().getPages(),600, 20 + (int)disp);
         displayHeader(500, 5);
         text("Simlation cicle: " + Clock.getInstance().getTime(), 20, 20);
-        
-        
-        
+        text("Placement policy: " + sim.getPlacementPolicy().toString(), 20, 40);
+        text("Replacement scope: " + sim.getScope().toString(), 20, 60);
+        text("Replacement policy: " + sim.getReplacementPolicy().toString(), 20, 80);
     }
     
     public void displayHeader(int x, int y){
@@ -188,11 +174,9 @@ public class ManejoDeMemoria extends PApplet {
         disp += event.getCount() * dispSpeed;
     }
     
-    
-    
     public void displayMemoryArray(Page[] pages,int x, int y){
         Page currentPage;
-        for (int i = 0; i < pages.length; i++) {
+        for (int i = 0; i < pages.length; i++){
             currentPage = pages[i];
             fill(180);
             stroke(0);
@@ -203,17 +187,10 @@ public class ManejoDeMemoria extends PApplet {
             text(i + "->" + currentText, x, 3 + y + i *PAGE_SIZE);
             
         }
-        
-           
-        
-        
     }
     
-    public void handleDropListEvents(GDropList list, GEvent event)
-    { 
-        
-        if (list == RepScopePicker)
-        {
+    public void handleDropListEvents(GDropList list, GEvent event){  
+        if (list == RepScopePicker){
           println(RepScopePicker.getSelectedIndex());    
         }
     }
@@ -237,6 +214,10 @@ public class ManejoDeMemoria extends PApplet {
         ReplacementPolicyType repPolicy = ReplacementPolicyType.values()[RepPolicyPicker.getSelectedIndex()];
         PlacementPolicyType placePolicy = PlacementPolicyType.values()[PlacementPolicyPicker.getSelectedIndex()];
         int degreOfMultiprog = multiprograming.getValueI();
+    }
+    
+    public void config_draw(PApplet appc, GWinData data){
+        appc.background(255);
     }
     
 

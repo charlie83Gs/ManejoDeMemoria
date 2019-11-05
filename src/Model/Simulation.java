@@ -41,6 +41,18 @@ public class Simulation implements Swapable {
     public void setProcesses(ArrayList<Process> processes) {
         this.processes = processes;
     }
+
+    public PlacementPolicy getPlacementPolicy() {
+        return placementPolicy;
+    }
+
+    public ReplacementPolicy getReplacementPolicy() {
+        return replacementPolicy;
+    }
+
+    public ReplacementScope getScope() {
+        return scope;
+    }
     
     
     

@@ -26,4 +26,9 @@ public class FirstAvailable implements PlacementPolicy{
         return -1;
     }
     
+    @Override
+    public String toString() {
+        return "First available";
+    }
+    
 }

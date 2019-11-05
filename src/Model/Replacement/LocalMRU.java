@@ -24,10 +24,6 @@ public class LocalMRU implements ReplacementPolicy, Observer<Page>{
         arrays = new HashMap<>();
     }
     
-    
-    
-    
-    
     @Override
     public int fetch(MainMemory men, Model.Process proc) {
         ArrayList<Page> mostRecentyUsed = getProcMRUArray(proc);
@@ -62,6 +58,9 @@ public class LocalMRU implements ReplacementPolicy, Observer<Page>{
         return mostRecentyUsed.get(mostRecentyUsed.size()-2);
     }
     
-    
+    @Override
+    public String toString() {
+        return "MRU";
+    }
     
 }

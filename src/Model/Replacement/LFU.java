@@ -60,4 +60,9 @@ public class LFU implements ReplacementPolicy, Observer<Page>{
         uses.put(object, totalUses + 1);
     }
     
+    @Override
+    public String toString() {
+        return "LFU";
+    }
+    
 }

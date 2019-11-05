@@ -70,4 +70,9 @@ public class LocalLRU implements ReplacementPolicy, Observer<Page>{
         return arrays.get(proc);
     }
     
+    @Override
+    public String toString() {
+        return "LRU";
+    }
+    
 }

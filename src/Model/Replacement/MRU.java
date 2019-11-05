@@ -23,10 +23,6 @@ public class MRU implements ReplacementPolicy, Observer<Page>{
         mostRecentyUsed = new ArrayList<>();
     }
     
-    
-    
-    
-    
     @Override
     public int fetch(MainMemory men, Process proc) {
         Page recentPage = getMostRecentlyUsed();
@@ -45,6 +41,9 @@ public class MRU implements ReplacementPolicy, Observer<Page>{
         return mostRecentyUsed.get(mostRecentyUsed.size()-2);
     }
     
-    
+    @Override
+    public String toString() {
+        return "MRU";
+    }
     
 }

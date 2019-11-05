@@ -14,5 +14,4 @@ import Model.Process;
  */
 public interface ReplacementPolicy {
     public int fetch(MainMemory men, Process proc);
-    
 }

@@ -28,4 +28,9 @@ public class NextAvailable implements PlacementPolicy {
         return -1;
     }
     
+    @Override
+    public String toString() {
+        return "Next available";
+    }
+    
 }

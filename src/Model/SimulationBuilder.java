@@ -70,8 +70,6 @@ public class SimulationBuilder {
         this.replacementPolicyType = replacementPolicyType;
     }
     
-    
-    
     private ReplacementPolicy getReplacementPolicy(MainMemory memory){
         if(replacementPolicyType == ReplacementPolicyType.FIFO){
             return replacementFactory.getFIFO(memory);

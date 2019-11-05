@@ -54,4 +54,9 @@ public class LRU implements ReplacementPolicy, Observer<Page>{
         return pages.remove(0);
     }
     
+    @Override
+    public String toString() {
+        return "LRU";
+    }
+    
 }

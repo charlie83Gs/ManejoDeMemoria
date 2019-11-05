@@ -59,5 +59,9 @@ public class LocalFiFO implements ReplacementPolicy, Observer<Page>{
         return queues.get(proc);
     }
     
+    @Override
+    public String toString() {
+        return "FIFO";
+    }
     
 }

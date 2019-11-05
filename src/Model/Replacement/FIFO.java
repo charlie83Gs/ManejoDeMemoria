@@ -43,4 +43,9 @@ public class FIFO implements ReplacementPolicy, Observer<Page>{
         
     }
     
+    @Override
+    public String toString() {
+        return "FIFO";
+    }
+    
 }

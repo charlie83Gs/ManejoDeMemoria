@@ -33,6 +33,16 @@ public class Simulation implements Swapable {
         this.replacementPolicy = replacementPolicy;
         this.scope = scope;
     }
+
+    public ArrayList<Process> getProcesses() {
+        return processes;
+    }
+
+    public void setProcesses(ArrayList<Process> processes) {
+        this.processes = processes;
+    }
+    
+    
     
 
     @Override
@@ -70,14 +80,16 @@ public class Simulation implements Swapable {
             //System.out.println("n " + next);
             //if there are free pages
             
+            
+            
             //visit page if posible
             if(memory.readPage(page) && !(scope == ReplacementScope.LOCAL && process.getAvailablePages() < 1)){
                 pageHits++;
                 //System.out.println("Page hit!!");
             //page fault
             }else{
-                 pageFaults++;
-                 //System.out.println(pageFaults);
+                pageFaults++;
+                //System.out.println(pageFaults);
                 //load page
                 if(freeIndex >= 0){
 

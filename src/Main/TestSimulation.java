@@ -7,6 +7,7 @@ package Main;
 
 import Model.BackingStore;
 import Model.FetchList;
+import InputOutput.FileManager;
 import Model.MemorySwaper;
 import Model.Page;
 import Model.PageProfile;
@@ -16,6 +17,7 @@ import Model.Replacement.ReplacementScope;
 import Model.ReplacementPolicyType;
 import Model.Simulation;
 import Model.SimulationBuilder;
+import java.util.ArrayList;
 import java.util.Random;
 import org.json.JSONObject;
 
@@ -25,6 +27,23 @@ import org.json.JSONObject;
  */
 public class TestSimulation {
     private static int PAGES = 20;
+    private static int SIM = 1500;
+    
+    public Simulation getSimulation(){
+        PageProfile profile = new PageProfile(64);
+        
+        SimulationBuilder simBuilder =new SimulationBuilder();
+        simBuilder.setProfile(profile);
+        simBuilder.setMemory(64000);
+        simBuilder.setStore(128000);
+        simBuilder.setPlacementPolicy(PlacementPolicyType.NEXT_AVAILLABLE);
+        simBuilder.setReplacementPolicy(ReplacementPolicyType.SECOND_CHANCE);
+        simBuilder.setReplacementScope(ReplacementScope.LOCAL);
+        
+        return simBuilder.getResult();
+    }
+    
+    
     public static void TestMemorySwap(int processesAmount){
         Process[] process = new Process[processesAmount];
         int SIM = 4000;
@@ -56,9 +75,9 @@ public class TestSimulation {
         System.out.println("Finished swap test ");
     }
     
+    /*
     public static Simulation TestTimeStep(int processesAmount){
         Process[] process = new Process[processesAmount];
-        int SIM = 15000;
         PageProfile profile = new PageProfile(64);
         
         SimulationBuilder simBuilder =new SimulationBuilder();
@@ -71,15 +90,21 @@ public class TestSimulation {
 
         Simulation sim = simBuilder.getResult();
         
+        FileManager fm = new FileManager(sim.getStore());
+        ArrayList<Process> procesos = fm.readData("C:\\Users\\J\\Documents\\GitHub\\ManejoDeMemoria\\procesos.txt", "C:\\Users\\J\\Documents\\GitHub\\ManejoDeMemoria\\fetchlist.txt");
+        for(Process p: procesos){
+            sim.addProcess(p);
+        }
+        
         for (int i=0; i<process.length; i++) 
         { 
             process[i] = new Process(i,FetchList.CreateRandomFetchList(3000, PAGES),PAGES,2,sim.getStore(),50);
            
-            
             sim.addProcess(process[i]);
         }
         
         
+
         
         //simulate SIM times steps swaps
         Random r=new Random();
@@ -95,6 +120,20 @@ public class TestSimulation {
         
         return sim;
     }
+    */
     
-    
+    public static Simulation TestTimeStep(Simulation sim, int processesAmount){
+        
+        //simulate SIM times steps swaps
+        Random r=new Random();
+        if(SIM-- > 0){
+            sim.simulate(r.nextInt(processesAmount));
+        }   
+        
+        System.out.println("Hits: " + sim.getPageHits());
+        System.out.println("Faults: " + sim.getPageFaults());
+        System.out.println("Finished step test ");
+        
+        return sim;
+    }
 }

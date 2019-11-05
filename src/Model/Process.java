@@ -33,6 +33,26 @@ public class Process {
         this.memoryTable = new MemoryTable(this.pages);
     }
     
+    public Process(int id, int pages, int priority,BackingStore store, int totalPages) {
+        this.id = id;
+        this.fetchlist = fetchlist;
+        this.pages = new Page[pages];
+        this.priority = priority;
+        this.totalPages = totalPages;
+        
+        
+        for (int i = 0; i < this.pages.length; i++) {
+           this.pages[i] = store.allocatePage(this, i); // storing random integers in an array
+        
+        }
+        //create new memory table
+        this.memoryTable = new MemoryTable(this.pages);
+    }
+
+    public void setFetchlist(FetchList fetchlist) {
+        this.fetchlist = fetchlist;
+    }
+    
     public boolean isOnMemory(Page page){
         return memoryTable.isOnMemory(page);
     }

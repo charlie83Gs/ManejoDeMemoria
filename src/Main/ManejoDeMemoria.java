@@ -11,7 +11,7 @@ package Main;
  */
 import Model.BackingStore;
 import Model.Clock;
-import Model.FileManager;
+import InputOutput.FileManager;
 import Model.MainMemory;
 import Model.Page;
 import Model.PageProfile;
@@ -23,6 +23,7 @@ import Model.Simulation;
 import processing.core.PApplet;
 import processing.event.MouseEvent;
 import g4p_controls.*;
+import java.io.File;
 
 import java.util.ArrayList;
 import java.util.EnumSet;
@@ -32,16 +33,23 @@ import java.util.stream.Stream;
 
 public class ManejoDeMemoria extends PApplet {
     final int PAGE_SIZE = 18;
-    float disp = 0;
+    float disp = 20;
     float dispSpeed = 20;
+    int width = 900, height = 600;
     Simulation sim;
     GDropList RepScopePicker;
     GDropList RepPolicyPicker;
     GDropList PlacementPolicyPicker;
     GSlider multiprograming;
     
+    String processPath, fetchListPath;
     
-    GButton butt;
+    
+    GButton configButt,
+            processButt,
+            fetchListButt,
+            simulateNext;
+    
     GWindow window;
     
     ArrayList<Process> processes;
@@ -49,12 +57,12 @@ public class ManejoDeMemoria extends PApplet {
     public static void main(String[] args){       
         PApplet.main("Main.ManejoDeMemoria");
         
-      
+        
     }
 
 
     public void settings(){
-        size(900,600);
+        size(width, height);
         
     }
     
@@ -62,15 +70,45 @@ public class ManejoDeMemoria extends PApplet {
     public void setup() {
         processes = new ArrayList<>();
         
-        sim = TestSimulation.TestTimeStep(10);
+        sim = new TestSimulation().getSimulation();
+        FileManager fm = new FileManager(sim.getStore());
+        ArrayList<Model.Process> procesos = fm.readData("C:\\Users\\J\\Documents\\GitHub\\ManejoDeMemoria\\procesos.txt", "C:\\Users\\J\\Documents\\GitHub\\ManejoDeMemoria\\fetchlist.txt");
+        for(Model.Process p: procesos){
+            sim.addProcess(p);
+        }
+        
+        
         stroke(155, 0, 0);
         
         //initialize items
        
        
-        butt = new GButton(this, 300, 300, 50, 100, "Butt");
+        configButt = new GButton(this, this.width - 75, this.height - 50, 75, 50, "configButt");
+        processButt = new GButton(this, 0, this.height - 50, 75, 50, "Process path");
+        fetchListButt = new GButton(this, 75, this.height - 50, 75, 50, "Fetch list path");
+        simulateNext = new GButton(this, 350, 300, 50, 100, "next");
         
     }
+    
+    public void handleButtonEvents(GButton button, GEvent event) {
+        switch(button.getText()){
+            case "configButt":
+                createWindows();
+                break;
+            case "Process path":
+                selectInput("Seleccione el archivo con la información de los procesos", "processPathSelected");
+                break;
+            case "Fetch list path":
+                selectInput("Seleccione el archivo con la información de los procesos", "fetchPathSelected");
+                break;
+            case "next":
+                sim = TestSimulation.TestTimeStep(sim, sim.getProcesses().size());
+                break;
+                
+        
+        }
+    }
+    
     public void config_draw(PApplet appc, GWinData data){
         appc.background(255);
     }
@@ -129,7 +167,7 @@ public class ManejoDeMemoria extends PApplet {
         
         displayMemoryArray(sim.getMemory().getPages(),500, 20 + (int)disp);
         displayMemoryArray(sim.getStore().getPages(),600, 20 + (int)disp);
-        displayHeader(300, 5);
+        displayHeader(500, 5);
         text("Simlation cicle: " + Clock.getInstance().getTime(), 20, 20);
         
         
@@ -180,10 +218,18 @@ public class ManejoDeMemoria extends PApplet {
         }
     }
     
-    public void handleButtonEvents(GButton button, GEvent event) {
-        System.out.println("but");
-        createWindows();
-        
+    public void processPathSelected(File selection) {
+        if (selection != null){
+           System.out.println("processpath: " + selection.getAbsolutePath());
+           processPath = selection.getAbsolutePath();
+        } 
+    }
+    
+    public void fetchPathSelected(File selection) {
+        if (selection != null){
+           System.out.println("fetchpath: " + selection.getAbsolutePath());
+           fetchListPath = selection.getAbsolutePath();
+        } 
     }
     
     public void update_config(){

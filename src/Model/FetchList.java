@@ -33,7 +33,7 @@ public class FetchList {
     }
     
     public boolean isFinished(){
-        return usage.length <= actual;
+        return usage.length-1 <= actual;
     }
     /**
      * 

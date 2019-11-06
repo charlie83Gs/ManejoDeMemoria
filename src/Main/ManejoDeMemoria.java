@@ -48,6 +48,7 @@ public class ManejoDeMemoria extends PApplet {
     GDropList PlacementPolicyPicker;
     
     GButton configButt, nextButt, resetButt, fullSimulation, add, succ;
+    GTextArea processesInfo;
     GWindow window, initialConfigW;
         
     public static void main(String[] args){       
@@ -70,7 +71,10 @@ public class ManejoDeMemoria extends PApplet {
         fullSimulation = new GButton(this, this.width - 90, this.height - 50, 80, 40, "Full simulation");
         add = new GButton(this, 170, 110, 20, 20, "+");
         succ = new GButton(this, 150, 110, 20, 20, "-");
+        processesInfo = new GTextArea(this, 20, 130, 450, 350);
+        processesInfo.setEnabled(false);
         this.setVisibility(false);
+        
         
         
     }
@@ -133,6 +137,7 @@ public class ManejoDeMemoria extends PApplet {
         this.fullSimulation.setVisible(visibility);
         this.add.setVisible(visibility);
         this.succ.setVisible(visibility);
+        this.processesInfo.setVisible(visibility);
     }
     
     @Override
@@ -148,13 +153,14 @@ public class ManejoDeMemoria extends PApplet {
             text("Replacement scope: " + sim.getScope().toString(), 20, 60);
             text("Replacement policy: " + sim.getReplacementPolicy().toString(), 20, 80);
             text("Degree of multiprogramming: " + this.multiprogramming, 20, 100);
+            
+            this.processesInfo.setText("All processes:" + "\n" + 
+                                            this.processListToString(sim.getProcesses()) + "\n" + "\n" +
+                                        "Processes on memory:" + "\n" + 
+                                            this.processListToString(sim.getOnMemory()) + "\n" +
+                                        "Finished processes:" + "\n" +
+                                            this.processListToString(sim.getFinished()));
 
-            int yOff = 150, xOff = 20;
-            this.drawProcessList("All processes", xOff, yOff, sim.getProcesses());
-            yOff += ((sim.getProcesses().size() + 2) * 15);
-            this.drawProcessList("Processes on memory", xOff, yOff, sim.getOnMemory());
-            yOff += ((sim.getOnMemory().size() + 2) * 15);
-            this.drawProcessList("Finished processes", xOff, yOff, sim.getFinished());
         }
     }
 
@@ -186,14 +192,12 @@ public class ManejoDeMemoria extends PApplet {
         }
     }
     
-    public void drawProcessList(String tittle, int xOff, int yOff, ArrayList<Process> toDraw){
-    
-        text(tittle, xOff, yOff);
-        yOff += 15;
+    public String processListToString(ArrayList<Process> toDraw){
+        String result = "\n";
         for(int i = 0; i < toDraw.size(); i++){
-            text(toDraw.get(i).toStringGrafico(), xOff, yOff);
-            yOff += 15;
+            result += toDraw.get(i).toStringGrafico() + "\n";
         }
+        return result;
     }
     
     public void setConfig(){

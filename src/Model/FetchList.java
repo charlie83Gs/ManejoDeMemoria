@@ -5,6 +5,7 @@
  */
 package Model;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 /**
@@ -20,20 +21,29 @@ public class FetchList {
         this.actual = 0;
     }
     
+    
+    public ArrayList<Integer> getPendingList(){
+        ArrayList<Integer> result = new ArrayList();
+        for(int i = actual; i < usage.length; i++){
+            result.add(usage[i]);
+        }
+        return result;
+    }
+    
     /**
      * 
      * @return returns next fetch -1 if there are no more calls for this process
      */
     public int getNext(){
         //when all calls are used return invalid
-        if(usage.length <= ++actual ) 
+        if(usage.length <= actual) 
             return -1;
         
-        return usage[actual];
+        return usage[actual++];
     }
     
     public boolean isFinished(){
-        return usage.length-1 <= actual;
+        return usage.length <= actual;
     }
     /**
      * 

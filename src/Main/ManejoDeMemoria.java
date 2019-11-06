@@ -11,6 +11,7 @@ package Main;
  */
 import Model.BackingStore;
 import Model.Clock;
+import Model.Process;
 import InputOutput.FileManager;
 import Model.MainMemory;
 import Model.Page;
@@ -35,75 +36,158 @@ import java.util.stream.Stream;
 public class ManejoDeMemoria extends PApplet {
     final int PAGE_SIZE = 18;
     float disp = 20;
-    float dispSpeed = 20;
+    float dispSpeed = 40;
     int width = 900, height = 600;
-    Simulation sim;
+    int multiprogramming = 3;
+    
+    String processPath = "", fetchListPath = "";
+    
+    Simulation sim = null;
     GDropList RepScopePicker;
     GDropList RepPolicyPicker;
     GDropList PlacementPolicyPicker;
-    GSlider multiprograming;
     
-    String processPath, fetchListPath;
-    
-    GButton configButt,
-            processButt,
-            fetchListButt,
-            simulateNext;
-    
-    GWindow window;
-    
-    ArrayList<Process> processes;
-    
+    GButton configButt, nextButt, resetButt, add, succ;
+    GWindow window, initialConfigW;
+        
     public static void main(String[] args){       
         PApplet.main("Main.ManejoDeMemoria");
     }
 
     public void settings(){
         size(width, height);
-        
     }
     
     @Override
     public void setup() {
-        processes = new ArrayList<>();
         
-        sim = new TestSimulation().getSimulation();
-        FileManager fm = new FileManager(sim.getStore());
-        ArrayList<Model.Process> procesos = fm.readData("C:\\Users\\J\\Documents\\GitHub\\ManejoDeMemoria\\procesos.txt", "C:\\Users\\J\\Documents\\GitHub\\ManejoDeMemoria\\fetchlist.txt");
-        for(Model.Process p: procesos){
-            sim.addProcess(p);
-        }
-        
-        stroke(155, 0, 0);
+        this.createInitialConfigWindow();
         
         //initialize items
-        configButt = new GButton(this, this.width - 75, this.height - 50, 75, 50, "configButt");
-        processButt = new GButton(this, 0, this.height - 50, 75, 50, "Process path");
-        fetchListButt = new GButton(this, 75, this.height - 50, 75, 50, "Fetch list path");
-        simulateNext = new GButton(this, 350, this.height - 50, 75, 50, "next");
+        configButt = new GButton(this, 10, this.height - 40, 80, 30, "Configuration");
+        nextButt = new GButton(this, 410, this.height - 40, 80, 30, "Next step");
+        resetButt = new GButton(this, this.width - 90, 10, 80, 30, "Reset");
+        add = new GButton(this, 170, 110, 20, 20, "+");
+        succ = new GButton(this, 150, 110, 20, 20, "-");
+        this.setVisibility(false);
         
+        
+    }
+    
+    public void setUpSim(){
+        sim = new TestSimulation().getSimulation();
+        sim.setProcesses(this.loadProcesses(sim.getStore()));
+        sim.updateOnMemoryList(this.multiprogramming);
     }
     
     public void handleButtonEvents(GButton button, GEvent event) {
         switch(button.getText()){
-            case "configButt":
+            case "+":
+                this.handleDegree(1);
+                break;
+            case "-":
+                this.handleDegree(-1);
+                break;
+            case "Configuration":
                 createWindows();
                 break;
             case "Process path":
                 selectInput("Seleccione el archivo con la información de los procesos", "processPathSelected");
                 break;
-            case "Fetch list path":
+            case "Requests path":
                 selectInput("Seleccione el archivo con la información de los procesos", "fetchPathSelected");
                 break;
-            case "next":
-                sim = TestSimulation.TestTimeStep(sim, sim.getProcesses().size());
+            case "Next step":
+                sim = TestSimulation.TestTimeStep(sim, this.multiprogramming);
+                if(this.sim.cleanOnMemoryList()){
+                    this.sim.updateOnMemoryList(this.multiprogramming);
+                }
                 break;
             case "Guardar":
                 this.setConfig();
+                this.window.close();
                 break;
             case "Cancelar":
                 this.window.close();
                 break;
+            case "Reset":
+                this.disp = 20;
+                this.setUpSim();
+                break;
+            case "Ok":
+                this.setVisibility(true);
+                this.setUpSim();
+                this.initialConfigW.forceClose();
+                break;
+        }
+    }
+    
+    public void setVisibility(boolean visibility){
+        this.configButt.setVisible(visibility);
+        this.nextButt.setVisible(visibility);
+        this.resetButt.setVisible(visibility);
+        this.add.setVisible(visibility);
+        this.succ.setVisible(visibility);
+    }
+    
+    @Override
+    public void draw() {
+        background(255);
+        
+        if(sim != null){
+            displayMemoryArray(sim.getMemory().getPages(),500, 20 + (int)disp);
+            displayMemoryArray(sim.getStore().getPages(),600, 20 + (int)disp);
+            displayHeader(500, 5);
+            text("Simlation cicle: " + Clock.getInstance().getTime(), 20, 20);
+            text("Placement policy: " + sim.getPlacementPolicy().toString(), 20, 40);
+            text("Replacement scope: " + sim.getScope().toString(), 20, 60);
+            text("Replacement policy: " + sim.getReplacementPolicy().toString(), 20, 80);
+            text("Degree of multiprogramming: " + this.multiprogramming, 20, 100);
+
+            int yOff = 150, xOff = 20;
+            this.drawProcessList("All processes", xOff, yOff, sim.getProcesses());
+            yOff += ((sim.getProcesses().size() + 2) * 15);
+            this.drawProcessList("Processes on memory", xOff, yOff, sim.getOnMemory());
+            yOff += ((sim.getOnMemory().size() + 2) * 15);
+            this.drawProcessList("Finished processes", xOff, yOff, sim.getFinished());
+        }
+    }
+
+    public ArrayList<Model.Process> loadProcesses(BackingStore bk){
+        FileManager fm = new FileManager(bk);
+        ArrayList<Model.Process> procesos = null;
+        
+        if(this.fetchListPath.equals("") || this.processPath.equals("")){
+            System.out.println("SE HAN CARGADO LOS ARCHIVOS DESDE EL PATH POR DEFECTO");
+            procesos = fm.readData("procesos.txt", "fetchlist.txt");
+        }
+        else{
+            System.out.println("se han cargado los archivos desde el path selecionado");
+            procesos = fm.readData(this.processPath, this.fetchListPath);
+        }
+        
+        return procesos;
+    }
+    
+    public void handleDegree(int val){
+        if(this.sim != null){
+            if(this.multiprogramming > 1 && val < 0){
+                this.multiprogramming = this.multiprogramming + val;
+            }
+            else if(this.multiprogramming < 20 && val > 0){
+                this.multiprogramming = this.multiprogramming + val;
+            }
+            this.sim.updateOnMemoryList(this.multiprogramming);
+        }
+    }
+    
+    public void drawProcessList(String tittle, int xOff, int yOff, ArrayList<Process> toDraw){
+    
+        text(tittle, xOff, yOff);
+        yOff += 15;
+        for(int i = 0; i < toDraw.size(); i++){
+            text(toDraw.get(i).toStringGrafico(), xOff, yOff);
+            yOff += 15;
         }
     }
     
@@ -117,8 +201,18 @@ public class ManejoDeMemoria extends PApplet {
         
     }
     
-    void createWindows() 
-    {
+    public void createInitialConfigWindow() {
+        this.initialConfigW = GWindow.getWindow(this, "Configuración inicial", 500, 50, 477, 538, JAVA2D);
+        this.initialConfigW.addDrawHandler(this, "config_draw");
+        this.initialConfigW.setActionOnClose(GWindow.KEEP_OPEN);        
+        G4P.registerSketch(this.initialConfigW);
+        
+        new GButton(this.initialConfigW, this.initialConfigW.width - 90, this.initialConfigW.height - 40, 80, 30, "Ok");
+        new GButton(this.initialConfigW, 0, this.initialConfigW.height - 40, 80, 30, "Process path");
+        new GButton(this.initialConfigW, 90, this.initialConfigW.height - 40, 80, 30, "Requests path");        
+    }
+    
+    public void createWindows() {
         window = GWindow.getWindow(this, "Help", 500, 50, 477, 538, JAVA2D);
         window.addDrawHandler(this, "config_draw");
         window.setActionOnClose(GWindow.CLOSE_WINDOW);
@@ -160,28 +254,14 @@ public class ManejoDeMemoria extends PApplet {
         PlacementPolicyPicker = new GDropList(window, pickerX, pickerY +140, pickerWidth, pickerHeight, optionsPerPage);
         PlacementPolicyPicker.setItems(fetchPolicyStrings, 0); 
         
-        new GLabel(window, pickerX, pickerY + 150,300, 50, "Degree of multiprograming");
         
-        multiprograming = new GSlider(window,pickerX, pickerY + 190,300, 20, 100);
         
-        new GButton(window, window.width - 160, window.height - 50, 75, 50, "Guardar");
-        new GButton(window, window.width - 75, window.height - 50, 75, 50, "Cancelar");
+        new GButton(window, window.width - 180, window.height - 40, 80, 30, "Guardar");
+        new GButton(window, window.width - 90, window.height - 40, 80, 30, "Cancelar");
         
     }
 
-    @Override
-    public void draw() {
-        background(255,255,255);
-        
-        
-        displayMemoryArray(sim.getMemory().getPages(),500, 20 + (int)disp);
-        displayMemoryArray(sim.getStore().getPages(),600, 20 + (int)disp);
-        displayHeader(500, 5);
-        text("Simlation cicle: " + Clock.getInstance().getTime(), 20, 20);
-        text("Placement policy: " + sim.getPlacementPolicy().toString(), 20, 40);
-        text("Replacement scope: " + sim.getScope().toString(), 20, 60);
-        text("Replacement policy: " + sim.getReplacementPolicy().toString(), 20, 80);
-    }
+    
     
     public void displayHeader(int x, int y){
         noStroke();
@@ -194,7 +274,7 @@ public class ManejoDeMemoria extends PApplet {
     @Override
     public void mouseWheel(MouseEvent event) {
         super.mouseWheel(event); //To change body of generated methods, choose Tools | Templates.
-        disp += event.getCount() * dispSpeed;
+        disp -= event.getCount() * dispSpeed;
     }
     
     public void displayMemoryArray(Page[] pages,int x, int y){
@@ -236,7 +316,6 @@ public class ManejoDeMemoria extends PApplet {
         ReplacementScope scope = ReplacementScope.values()[RepScopePicker.getSelectedIndex()];
         ReplacementPolicyType repPolicy = ReplacementPolicyType.values()[RepPolicyPicker.getSelectedIndex()];
         PlacementPolicyType placePolicy = PlacementPolicyType.values()[PlacementPolicyPicker.getSelectedIndex()];
-        int degreOfMultiprog = multiprograming.getValueI();
     }
     
     public void config_draw(PApplet appc, GWinData data){

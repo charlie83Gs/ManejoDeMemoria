@@ -12,6 +12,11 @@
   {
     "id": 3,
     "pages": 20,
-    "prior": 6
+    "prior": 1
+  },
+  {
+    "id": 4,
+    "pages": 20,
+    "prior": 1
   }
 ]

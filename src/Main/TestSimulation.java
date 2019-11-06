@@ -32,7 +32,7 @@ public class TestSimulation {
     public Simulation getSimulation(){
         PageProfile profile = new PageProfile(64);
         
-        SimulationBuilder simBuilder =new SimulationBuilder();
+        SimulationBuilder simBuilder = new SimulationBuilder();
         simBuilder.setProfile(profile);
         simBuilder.setMemory(64000);
         simBuilder.setStore(128000);
@@ -122,12 +122,12 @@ public class TestSimulation {
     }
     */
     
-    public static Simulation TestTimeStep(Simulation sim, int processesAmount){
+    public static Simulation TestTimeStep(Simulation sim, int multiprogramming){
         
         //simulate SIM times steps swaps
         Random r=new Random();
         if(SIM-- > 0){
-            sim.simulate(r.nextInt(processesAmount));
+            sim.simulate(r.nextInt(multiprogramming));
         }   
         
         System.out.println("Hits: " + sim.getPageHits());

@@ -49,6 +49,12 @@ public class Process {
         this.memoryTable = new MemoryTable(this.pages);
     }
 
+    public int getPriority() {
+        return priority;
+    }
+
+    
+    
     public void setFetchlist(FetchList fetchlist) {
         this.fetchlist = fetchlist;
     }
@@ -93,6 +99,15 @@ public class Process {
     @Override
     public String toString() {
         return "Process{" + "id=" + id + ", fetchlist=" + fetchlist + ", pages=" + pages + ", memoryTable=" + memoryTable + ", priority=" + priority + '}';
+    }
+    
+    public String toStringGrafico(){
+        if(this.hasFinished()){
+            return "Process: " + id + " priority: " + this.priority;
+        }
+        else{
+            return "P: " + id + " prior: " + this.priority + " requests:" + this.fetchlist.getPendingList();
+        }
     }
     
     public int getAvailablePages(){

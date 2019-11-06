@@ -5,6 +5,9 @@
  */
 package Model;
 
+import java.awt.Color;
+import java.util.Random;
+
 /**
  *
  * @author curso
@@ -16,6 +19,8 @@ public class Process {
     private MemoryTable memoryTable;
     private int priority;
     int totalPages;
+    private int r, g, b;
+    
 
     public Process(int id, FetchList fetchlist, int pages, int priority,BackingStore store, int totalPages) {
         this.id = id;
@@ -28,6 +33,13 @@ public class Process {
            this.pages[i] = store.allocatePage(this, i); // storing random integers in an array
         
         }
+        
+        Random rand = new Random();
+        this.r = rand.nextInt(255);
+        this.g = rand.nextInt(255);
+        this.b = rand.nextInt(255);
+        
+        
         //create new memory table
         this.memoryTable = new MemoryTable(this.pages);
     }
@@ -44,6 +56,12 @@ public class Process {
            this.pages[i] = store.allocatePage(this, i); // storing random integers in an array
         
         }
+        
+        Random rand = new Random();
+        this.r = 255 - rand.nextInt(200);
+        this.g = rand.nextInt(255);
+        this.b = rand.nextInt(255);
+        
         //create new memory table
         this.memoryTable = new MemoryTable(this.pages);
     }
@@ -93,6 +111,20 @@ public class Process {
         return fetchlist.isFinished();
     }
 
+    public int getR() {
+        return r;
+    }
+
+    public int getG() {
+        return g;
+    }
+
+    public int getB() {
+        return b;
+    }
+
+    
+    
     @Override
     public String toString() {
         return "Process{" + "id=" + id + ", fetchlist=" + fetchlist + ", pages=" + pages + ", memoryTable=" + memoryTable + ", priority=" + priority + '}';

@@ -61,7 +61,7 @@ public class ManejoDeMemoria extends PApplet {
     
     @Override
     public void setup() {
-        
+        colorMode(RGB);
         this.createInitialConfigWindow();
         
         //initialize items
@@ -143,6 +143,7 @@ public class ManejoDeMemoria extends PApplet {
     @Override
     public void draw() {
         background(255);
+        
         
         if(sim != null){
             displayMemoryArray(sim.getMemory().getPages(),500, 20 + (int)disp);
@@ -228,7 +229,14 @@ public class ManejoDeMemoria extends PApplet {
         Page currentPage;
         for (int i = 0; i < pages.length; i++){
             currentPage = pages[i];
-            fill(180);
+            if(currentPage != null && currentPage.getOwner() != null){
+                fill(pages[i].getOwner().getR(),
+                        pages[i].getOwner().getG(),
+                        pages[i].getOwner().getB());
+            }
+            else{
+                fill(180);
+            }
             stroke(0);
             rect(x, y + i *PAGE_SIZE - PAGE_SIZE/2, PAGE_SIZE*4,PAGE_SIZE);
             fill(0);

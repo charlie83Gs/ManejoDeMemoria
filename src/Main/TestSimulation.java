@@ -39,6 +39,7 @@ public class TestSimulation {
         simBuilder.setPlacementPolicy(PlacementPolicyType.NEXT_AVAILLABLE);
         simBuilder.setReplacementPolicy(ReplacementPolicyType.SECOND_CHANCE);
         simBuilder.setReplacementScope(ReplacementScope.LOCAL);
+        SIM = 1500;
         
         return simBuilder.getResult();
     }

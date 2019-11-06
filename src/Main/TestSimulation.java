@@ -126,8 +126,26 @@ public class TestSimulation {
         
         //simulate SIM times steps swaps
         Random r=new Random();
-        if(SIM-- > 0){
+        if(SIM-- > 0 && multiprogramming > 0){
             sim.simulate(r.nextInt(multiprogramming));
+        }   
+        
+        System.out.println("Hits: " + sim.getPageHits());
+        System.out.println("Faults: " + sim.getPageFaults());
+        System.out.println("Finished step test ");
+        
+        return sim;
+    }
+    
+    public static Simulation TestFullSteps(Simulation sim, int multiprogramming){
+        
+        //simulate SIM times steps swaps
+        Random r=new Random();
+        while(SIM-- > 0 && multiprogramming > 0){
+            sim.simulate(r.nextInt(multiprogramming));
+            if(sim.cleanOnMemoryList()){
+                sim.updateOnMemoryList(multiprogramming);
+            }
         }   
         
         System.out.println("Hits: " + sim.getPageHits());

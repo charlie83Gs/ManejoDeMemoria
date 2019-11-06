@@ -22,7 +22,6 @@ public class Simulation implements Swapable {
     ReplacementScope scope;
     int pageFaults = 0;    
     int pageHits = 0;
-    
 
     public Simulation(BackingStore store, MainMemory memory, PlacementPolicy placementPolicy, ReplacementPolicy replacementPolicy, ReplacementScope scope) {
         this.store = store;
@@ -32,9 +31,6 @@ public class Simulation implements Swapable {
         this.replacementPolicy = replacementPolicy;
         this.scope = scope;
     }
-
-    
-    
 
     public ArrayList<Process> getOnMemory() {
         return onMemory;
@@ -52,7 +48,6 @@ public class Simulation implements Swapable {
         this.finished = finished;
     }
 
-    
     public int getHighestPriorityProcess(ArrayList<Process> listaProcesos){
         
         int lowestPriority = Integer.MAX_VALUE, index = -1;
@@ -146,9 +141,6 @@ public class Simulation implements Swapable {
     public ReplacementScope getScope() {
         return scope;
     }
-    
-    
-    
 
     @Override
     public MainMemory getMemory() {
@@ -211,8 +203,6 @@ public class Simulation implements Swapable {
             }
             Clock.getInstance().simulate(1);
         }
-        
-        
     }
 
     public int getPageFaults() {
@@ -222,7 +212,5 @@ public class Simulation implements Swapable {
     public int getPageHits() {
         return pageHits;
     }
-    
-    
     
 }

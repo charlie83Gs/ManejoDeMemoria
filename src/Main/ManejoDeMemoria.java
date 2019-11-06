@@ -47,7 +47,7 @@ public class ManejoDeMemoria extends PApplet {
     GDropList RepPolicyPicker;
     GDropList PlacementPolicyPicker;
     
-    GButton configButt, nextButt, resetButt, add, succ;
+    GButton configButt, nextButt, resetButt, fullSimulation, add, succ;
     GWindow window, initialConfigW;
         
     public static void main(String[] args){       
@@ -67,6 +67,7 @@ public class ManejoDeMemoria extends PApplet {
         configButt = new GButton(this, 10, this.height - 40, 80, 30, "Configuration");
         nextButt = new GButton(this, 410, this.height - 40, 80, 30, "Next step");
         resetButt = new GButton(this, this.width - 90, 10, 80, 30, "Reset");
+        fullSimulation = new GButton(this, this.width - 90, this.height - 50, 80, 40, "Full simulation");
         add = new GButton(this, 170, 110, 20, 20, "+");
         succ = new GButton(this, 150, 110, 20, 20, "-");
         this.setVisibility(false);
@@ -98,10 +99,13 @@ public class ManejoDeMemoria extends PApplet {
                 selectInput("Seleccione el archivo con la información de los procesos", "fetchPathSelected");
                 break;
             case "Next step":
-                sim = TestSimulation.TestTimeStep(sim, this.multiprogramming);
+                sim = TestSimulation.TestTimeStep(sim, sim.getOnMemory().size());
                 if(this.sim.cleanOnMemoryList()){
                     this.sim.updateOnMemoryList(this.multiprogramming);
                 }
+                break;
+            case "Full simulation":
+                sim = TestSimulation.TestFullSteps(sim, sim.getOnMemory().size());
                 break;
             case "Guardar":
                 this.setConfig();
@@ -126,6 +130,7 @@ public class ManejoDeMemoria extends PApplet {
         this.configButt.setVisible(visibility);
         this.nextButt.setVisible(visibility);
         this.resetButt.setVisible(visibility);
+        this.fullSimulation.setVisible(visibility);
         this.add.setVisible(visibility);
         this.succ.setVisible(visibility);
     }
@@ -201,6 +206,35 @@ public class ManejoDeMemoria extends PApplet {
         
     }
     
+    public void displayHeader(int x, int y){
+        noStroke();
+        fill(255);
+        rect(x, y - 10 , 400, 30);
+        fill(0);
+        text("Memory                Backing Store",x,y + 10);
+    }
+
+    @Override
+    public void mouseWheel(MouseEvent event) {
+        super.mouseWheel(event); //To change body of generated methods, choose Tools | Templates.
+        disp -= event.getCount() * dispSpeed;
+    }
+    
+    public void displayMemoryArray(Page[] pages,int x, int y){
+        Page currentPage;
+        for (int i = 0; i < pages.length; i++){
+            currentPage = pages[i];
+            fill(180);
+            stroke(0);
+            rect(x, y + i *PAGE_SIZE - PAGE_SIZE/2, PAGE_SIZE*4,PAGE_SIZE);
+            fill(0);
+            String currentText = "empty";
+            if(currentPage!= null) currentText = currentPage.toString();
+            text(i + "->" + currentText, x, 3 + y + i *PAGE_SIZE);
+            
+        }
+    }
+    
     public void createInitialConfigWindow() {
         this.initialConfigW = GWindow.getWindow(this, "Configuración inicial", 500, 50, 477, 538, JAVA2D);
         this.initialConfigW.addDrawHandler(this, "config_draw");
@@ -260,37 +294,6 @@ public class ManejoDeMemoria extends PApplet {
         new GButton(window, window.width - 90, window.height - 40, 80, 30, "Cancelar");
         
     }
-
-    
-    
-    public void displayHeader(int x, int y){
-        noStroke();
-        fill(255);
-        rect(x, y - 10 , 400, 30);
-        fill(0);
-        text("Memory                Backing Store",x,y + 10);
-    }
-
-    @Override
-    public void mouseWheel(MouseEvent event) {
-        super.mouseWheel(event); //To change body of generated methods, choose Tools | Templates.
-        disp -= event.getCount() * dispSpeed;
-    }
-    
-    public void displayMemoryArray(Page[] pages,int x, int y){
-        Page currentPage;
-        for (int i = 0; i < pages.length; i++){
-            currentPage = pages[i];
-            fill(180);
-            stroke(0);
-            rect(x, y + i *PAGE_SIZE - PAGE_SIZE/2, PAGE_SIZE*4,PAGE_SIZE);
-            fill(0);
-            String currentText = "empty";
-            if(currentPage!= null) currentText = currentPage.toString();
-            text(i + "->" + currentText, x, 3 + y + i *PAGE_SIZE);
-            
-        }
-    }
     
     public void handleDropListEvents(GDropList list, GEvent event){  
         if (list == RepScopePicker){
@@ -322,6 +325,4 @@ public class ManejoDeMemoria extends PApplet {
         appc.background(255);
     }
     
-
-
 }

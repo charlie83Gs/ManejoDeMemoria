@@ -24,7 +24,6 @@ public class Process {
         this.priority = priority;
         this.totalPages = totalPages;
         
-        
         for (int i = 0; i < this.pages.length; i++) {
            this.pages[i] = store.allocatePage(this, i); // storing random integers in an array
         
@@ -52,8 +51,6 @@ public class Process {
     public int getPriority() {
         return priority;
     }
-
-    
     
     public void setFetchlist(FetchList fetchlist) {
         this.fetchlist = fetchlist;
@@ -122,8 +119,5 @@ public class Process {
     public int getId() {
         return id;
     }
-    
-    
-    
     
 }

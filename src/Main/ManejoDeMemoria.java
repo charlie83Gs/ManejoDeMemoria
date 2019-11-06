@@ -154,10 +154,10 @@ public class ManejoDeMemoria extends PApplet {
             text("Replacement policy: " + sim.getReplacementPolicy().toString(), 20, 80);
             text("Degree of multiprogramming: " + this.multiprogramming, 20, 100);
             
-            this.processesInfo.setText("All processes:" + "\n" + 
-                                            this.processListToString(sim.getProcesses()) + "\n" + "\n" +
+            this.processesInfo.setText("All processes:" + "\n" +  
+                                            this.processListToString(sim.getProcesses()) + "\n \n" + 
                                         "Processes on memory:" + "\n" + 
-                                            this.processListToString(sim.getOnMemory()) + "\n" +
+                                            this.processListToString(sim.getOnMemory()) + "\n \n" + 
                                         "Finished processes:" + "\n" +
                                             this.processListToString(sim.getFinished()));
 
@@ -193,9 +193,9 @@ public class ManejoDeMemoria extends PApplet {
     }
     
     public String processListToString(ArrayList<Process> toDraw){
-        String result = "\n";
+        String result = "";
         for(int i = 0; i < toDraw.size(); i++){
-            result += toDraw.get(i).toStringGrafico() + "\n";
+            result += "     " + toDraw.get(i).toStringGrafico() + "\n";
         }
         return result;
     }

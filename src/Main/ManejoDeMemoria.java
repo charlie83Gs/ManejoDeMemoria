@@ -78,7 +78,7 @@ public class ManejoDeMemoria extends PApplet {
         nextButt = new GButton(this, 410, this.height - 40, 80, 30, "Next step");
         resetButt = new GButton(this, this.width - 90, 10, 80, 30, "Reset");
         fullSimulation = new GButton(this, this.width - 90, this.height - 50, 80, 40, "Full simulation");
-        processIdText = new GTextField(this, 410, this.height - 80, 80, 20);
+        processIdText = new GTextField(this, 410, this.height - 65, 80, 20);
         processesInfo = new GTextArea(this, 20, 130, 450, 350);
         processesInfo.setEnabled(false);
         
@@ -181,6 +181,7 @@ public class ManejoDeMemoria extends PApplet {
             text("Replacement scope: " + sim.getScope().toString(), 20, 60);
             text("Replacement policy: " + sim.getReplacementPolicy().toString(), 20, 80);
             text("Degree of multiprogramming: " + this.multiprogramming, 20, 100);
+            text("Process id to execute", 380, this.height - 85, 150, 25);
             
             this.processesInfo.setText("All processes:" + "\n" +  
                                             this.processListToString(sim.getProcesses()) + "\n \n" + 

@@ -115,7 +115,7 @@ public class ManejoDeMemoria extends PApplet {
                 break;
             case "Next step":
                 if(true/*this.isNumeric(this.processIdText.getText()) && sim.isInMemory(Integer.valueOf(this.processIdText.getText()))*/){
-                    sim = TestSimulation.TestTimeStep(sim, sim.getOnMemory().size());
+                    sim = TestSimulation.TestTimeStep(sim, Integer.valueOf(this.processIdText.getText()));
                     if(this.sim.cleanOnMemoryList()){
                         this.sim.updateOnMemoryList(this.multiprogramming);
                     }

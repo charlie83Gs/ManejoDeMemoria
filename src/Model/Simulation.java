@@ -176,6 +176,7 @@ public class Simulation implements Swapable {
             simulate(this.onMemory.get(processIndex));
     }
     
+    
     //simulate with Process
     public void simulate(Process process){
         

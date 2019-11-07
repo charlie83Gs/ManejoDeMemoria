@@ -123,12 +123,16 @@ public class TestSimulation {
     }
     */
     
-    public static Simulation TestTimeStep(Simulation sim, int multiprogramming){
+    public static Simulation TestTimeStep(Simulation sim, int proccessId){
         
         //simulate SIM times steps swaps
-        Random r=new Random();
-        if(SIM-- > 0 && multiprogramming > 0){
-            sim.simulate(r.nextInt(multiprogramming));
+        if(SIM > 0){
+            for(Process p: sim.getOnMemory()){
+                if(p.getId() == proccessId){
+                    sim.simulate(p);
+                    SIM--;//si no encuentra el proceso estaría restando al SIM y no debería porque no se ejecutó nada en ese ciclo
+                }
+            }
         }   
         
         System.out.println("Hits: " + sim.getPageHits());
@@ -141,7 +145,7 @@ public class TestSimulation {
     public static Simulation TestFullSteps(Simulation sim, int multiprogramming){
         
         //simulate SIM times steps swaps
-        Random r=new Random();
+        Random r = new Random();
         while(SIM-- > 0 && multiprogramming > 0){
             sim.simulate(r.nextInt(multiprogramming));
             if(sim.cleanOnMemoryList()){

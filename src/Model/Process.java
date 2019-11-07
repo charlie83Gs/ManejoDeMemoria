@@ -20,6 +20,7 @@ public class Process {
     private int priority;
     int totalPages;
     private int r, g, b;
+    private Random rand = new Random();
     
 
     public Process(int id, FetchList fetchlist, int pages, int priority,BackingStore store, int totalPages) {
@@ -34,7 +35,6 @@ public class Process {
         
         }
         
-        Random rand = new Random();
         this.r = rand.nextInt(255);
         this.g = rand.nextInt(255);
         this.b = rand.nextInt(255);
@@ -79,6 +79,9 @@ public class Process {
     }
     
     public Page getPage(int index){
+        if(rand.nextFloat() > 0.5){
+            pages[index].setDirty(true);
+        }
         return pages[index];
     }
 

@@ -31,6 +31,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.List;
+import java.util.Random;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -173,7 +174,8 @@ public class ManejoDeMemoria extends PApplet {
     public void draw() {
         background(bgColor);
         multiText.setText("Degree of multiprogramming: " + this.multiprogramming);
-        
+
+       
         if(loop){
             displayMemoryArray(sim.getMemory().getPages(),500, 20 + (int)disp);
             displayMemoryArray(sim.getStore().getPages(),600, 20 + (int)disp);

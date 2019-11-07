@@ -8,6 +8,8 @@ package Model;
 import Model.Replacement.ReplacementPolicy;
 import Model.Replacement.ReplacementScope;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 /**
  *
@@ -20,16 +22,64 @@ public class Simulation implements Swapable {
     PlacementPolicy placementPolicy;
     ReplacementPolicy replacementPolicy;
     ReplacementScope scope;
+    int degreeOfMultiprograming;
     int pageFaults = 0;    
     int pageHits = 0;
+    
+    
+    
+    
 
-    public Simulation(BackingStore store, MainMemory memory, PlacementPolicy placementPolicy, ReplacementPolicy replacementPolicy, ReplacementScope scope) {
+
+    
+    public Simulation(BackingStore store, MainMemory memory, PlacementPolicy placementPolicy, ReplacementPolicy replacementPolicy, ReplacementScope scope, int multiprograming, int prepaging) {
         this.store = store;
         this.memory = memory;
         this.processes = new ArrayList<>();
         this.placementPolicy = placementPolicy;
         this.replacementPolicy = replacementPolicy;
         this.scope = scope;
+        this.degreeOfMultiprograming = multiprograming;
+        
+        sortByPriority();
+        prepage(prepaging);
+    }
+    
+    
+    private void prepage(int prepaging){
+        if(prepaging <= 0 ) return;
+        //do the prepaging
+        int toPrepage = Math.min(processes.size(), prepaging);
+        for (int i = 0; i < toPrepage; i++) {
+            Process p = processes.get(i);
+            int localPrepage = Math.min(toPrepage, p.getAvailablePages());
+            
+            for (int j = 0; j < localPrepage; j++) {
+                
+            }
+        }
+        
+        
+        
+    }
+    
+    private void sortByPriority(){
+        
+        Comparator<Process> procComparator = new Comparator<Process>(){
+
+        public int compare(Process o1, Process o2)
+        {
+           int pages1 = o1.getAvailablePages(); 
+           int pages2 = o2.getAvailablePages();
+           
+           if(pages1 == pages2) return 0;
+           if(pages1 > pages2) return 1;
+           return -1;
+        }
+        };
+        Collections.sort(processes, procComparator);
+        
+    
     }
 
     public ArrayList<Process> getOnMemory() {

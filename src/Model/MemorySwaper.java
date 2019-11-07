@@ -32,8 +32,6 @@ public class MemorySwaper {
         newPage.getOwner().pageLoad(memoryPage, newPage);
         //swap in page into main memory
         memory.setPage(memoryPage, newPage);
-       
-        
         
         
 

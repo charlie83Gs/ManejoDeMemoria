@@ -48,8 +48,7 @@ public class Page {
     public String toString() {
         return "P" + owner.getId() + " : " + logicalPosition;
     }
-    
-    
+   
     
     
 }

@@ -47,6 +47,16 @@ public class Simulation implements Swapable {
     public void setFinished(ArrayList<Process> finished) {
         this.finished = finished;
     }
+    
+    public boolean isInMemory(int procId){
+    
+        for(Process p: this.onMemory){
+            if(procId == p.getId()){
+                return true;
+            }
+        }
+        return false;
+    }
 
     public int getHighestPriorityProcess(ArrayList<Process> listaProcesos){
         

@@ -33,6 +33,10 @@ public class Clock {
         return time;
     }
     
+    public void resetTime(){
+        this.time = 0;
+    }
+    
     
     
 }

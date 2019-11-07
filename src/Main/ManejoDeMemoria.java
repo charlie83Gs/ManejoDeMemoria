@@ -89,6 +89,7 @@ public class ManejoDeMemoria extends PApplet {
     }
     
     public void setUpSim(){
+        Clock.getInstance().resetTime();
         sim = new TestSimulation().getSimulation();
         sim.setProcesses(this.loadProcesses(sim.getStore()));
         sim.updateOnMemoryList(this.multiprogramming);
@@ -114,7 +115,7 @@ public class ManejoDeMemoria extends PApplet {
                 selectInput("Seleccione el archivo con la información de los procesos", "fetchPathSelected");
                 break;
             case "Next step":
-                if(true/*this.isNumeric(this.processIdText.getText()) && sim.isInMemory(Integer.valueOf(this.processIdText.getText()))*/){
+                if(this.isNumeric(this.processIdText.getText()) && sim.isInMemory(Integer.valueOf(this.processIdText.getText()))){
                     sim = TestSimulation.TestTimeStep(sim, Integer.valueOf(this.processIdText.getText()));
                     if(this.sim.cleanOnMemoryList()){
                         this.sim.updateOnMemoryList(this.multiprogramming);
@@ -152,6 +153,7 @@ public class ManejoDeMemoria extends PApplet {
                 this.window.forceClose();
                 break;
             case "Reset":
+                
                 this.disp = 20;
                 this.setUpSim();
                 break;
@@ -411,4 +413,6 @@ public class ManejoDeMemoria extends PApplet {
         }
         return true;
     }
+    
+    public void handleTextEvents(GEditableTextControl textcontrol, GEvent event) { /* code */ }
 }

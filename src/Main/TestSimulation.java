@@ -27,7 +27,7 @@ import org.json.JSONObject;
  */
 public class TestSimulation {
     private static int PAGES = 20;
-    private static int SIM = 1500;
+    static int SIM = 1500;
     
     public Simulation getSimulation(){
         PageProfile profile = new PageProfile(64);

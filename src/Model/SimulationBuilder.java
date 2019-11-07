@@ -21,6 +21,8 @@ public class SimulationBuilder {
     private int DEFAULT_PAGE_SIZE = 128;
     int store;
     int memory;
+    int prepaging;
+    int multiprograming;
     PageProfile profile;
     PlacementPolicy placementPolicy;
     ReplacementScope replacementScope = ReplacementScope.GLOBAL;
@@ -33,7 +35,8 @@ public class SimulationBuilder {
         placementPolicy = new FirstAvailable();
         //create corresponding replacement factory for replacement scope
         setReplacementScope(replacementScope);
-
+        prepaging = 0;
+        multiprograming = 3;
     }
     
     
@@ -94,6 +97,18 @@ public class SimulationBuilder {
         return null;
         
     }
+
+    public void setPrepaging(int prepaging) {
+        this.prepaging = prepaging;
+    }
+
+    public void setMultiprograming(int multiprograming) {
+        this.multiprograming = multiprograming;
+    }
+    
+    
+    
+    
     
     public Simulation getResult(){
         //create storage mechanisms acording to page size
@@ -103,7 +118,7 @@ public class SimulationBuilder {
         ReplacementPolicy replacementPolicyObject = getReplacementPolicy(memoryObject);
         
         
-        return new Simulation(storeObject, memoryObject, placementPolicy,replacementPolicyObject,replacementScope);
+        return new Simulation(storeObject, memoryObject, placementPolicy,replacementPolicyObject,replacementScope,multiprograming,prepaging);
         
     }
 }

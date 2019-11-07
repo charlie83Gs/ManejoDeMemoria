@@ -27,11 +27,16 @@ public class LRU implements ReplacementPolicy, Observer<Page>{
     
     @Override
     public int fetch(MainMemory men, Process proc) {
-        if(pages.size() > proc.getPages().length){
-            return Arrays.asList(men.getPages()).indexOf(pop());
-        }
-        return -1;
+        Page page = pop(men, proc);
+        
+        int index =Arrays.asList(men.getPages()).indexOf(page);
+        if(index == -1) return fetch(men,proc);
+        return index;
+        
+
     }
+    
+    
 
     //reads page acces
     @Override
@@ -50,8 +55,21 @@ public class LRU implements ReplacementPolicy, Observer<Page>{
         pages.add(page);
     }
     
-    public Page pop(){
-        return pages.remove(0);
+    public Page pop(MainMemory men , Process proc){
+        int selected = -1;
+        for (int i = 0; i < pages.size()-1; i++) {
+            Page page = pages.get(i);
+            System.out.println("pppp " + page.getOwner().getPriority() +">=" + proc.getPriority());
+            if(page.getOwner().getPriority() >= proc.getPriority()){
+                selected = i;
+                break;
+            }
+            
+        }
+        System.out.println("selected -> " + selected );
+        if(selected == -1) return men.getRandomPage();
+        
+        return pages.remove(selected);
     }
     
     @Override

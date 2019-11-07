@@ -69,6 +69,14 @@ public class Process {
     public int getPriority() {
         return priority;
     }
+    /**
+     * 
+     * @param page
+     * @return last visit to this page
+     */
+    public int getLastVisit(Page page){
+        return memoryTable.getFrame(page).getLastVisit();
+    }
     
     public void setFetchlist(FetchList fetchlist) {
         this.fetchlist = fetchlist;
@@ -123,6 +131,11 @@ public class Process {
         return b;
     }
 
+    public void setTotalPages(int totalPages) {
+        this.totalPages = totalPages;
+    }
+
+    
     
     
     @Override

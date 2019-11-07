@@ -29,19 +29,27 @@ public class LFU implements ReplacementPolicy, Observer<Page>{
         Page[] pages = men.getPages();
         
         int minUses = Integer.MAX_VALUE;
+        int minVisits = Integer.MAX_VALUE;
+
         Page leastUsed = null;
         for(Page page : pages){
             int totalUses = getUses(page);
-            if( totalUses < minUses && totalUses > 0){
+            int lastVisit = page.getOwner().getLastVisit(page);
+            boolean higherPriority = proc.getPriority() <= page.getOwner().getPriority();
+            if( totalUses <= minUses  && lastVisit < minVisits && higherPriority ){
                 minUses = totalUses;
+                minVisits = lastVisit;
                 leastUsed = page;
             }
         }
+        
+        if(leastUsed == null) leastUsed = men.getRandomPage();
         
         //reset lest used page
         uses.put(leastUsed, 0);
         
         int index = Arrays.asList(men.getPages()).indexOf(leastUsed);
+        //if(index == -1) return fetch(men,proc);
         return index;
         
     }

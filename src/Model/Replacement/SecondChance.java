@@ -35,10 +35,12 @@ public class SecondChance implements ReplacementPolicy, Observer<Page>{
     public int fetch(MainMemory men, Process proc) {
         MainMemory memory = men;
         Page nextPage = pages.peek();
-        while(secondChanceFlag.get(nextPage)){
+        while(secondChanceFlag.get(nextPage) || nextPage.getOwner().getPriority() < proc.getPriority()){
             //System.out.println("p: " + nextPage);
             //lost second chance
-            secondChanceFlag.put(nextPage, Boolean.FALSE);
+            if(nextPage.getOwner().getPriority() < proc.getPriority()){
+                secondChanceFlag.put(nextPage, Boolean.FALSE);    
+            }
             pages.add(pages.remove());
             nextPage = pages.peek();
         }
@@ -47,6 +49,7 @@ public class SecondChance implements ReplacementPolicy, Observer<Page>{
         
         //ineficient search for index
         int index = Arrays.asList(memory.getPages()).indexOf(nextPage);
+        if(index == -1) return fetch(men,proc);
         return index;
     }
 

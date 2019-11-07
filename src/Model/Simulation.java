@@ -23,6 +23,7 @@ public class Simulation implements Swapable {
     ReplacementPolicy replacementPolicy;
     ReplacementScope scope;
     int degreeOfMultiprograming;
+    int prepaging;
     int pageFaults = 0;    
     int pageHits = 0;
     
@@ -40,28 +41,28 @@ public class Simulation implements Swapable {
         this.replacementPolicy = replacementPolicy;
         this.scope = scope;
         this.degreeOfMultiprograming = multiprograming;
+        this.prepaging = prepaging;
         
         sortByPriority();
-        prepage(prepaging);
     }
     
-    
-    private void prepage(int prepaging){
-        if(prepaging <= 0 ) return;
-        //do the prepaging
-        int toPrepage = Math.min(processes.size(), prepaging);
-        for (int i = 0; i < toPrepage; i++) {
-            Process p = processes.get(i);
-            int localPrepage = Math.min(toPrepage, p.getAvailablePages());
+    private void prepageProcess(Process p){
+        if(prepaging < 1 ) return;
+        
+        int localPrepage = Math.min(prepaging, p.getAvailablePages());
+        System.out.println("prepaging " + localPrepage + "---" +  p.getAvailablePages());
+        for (int j = 0; j < localPrepage; j++) {
             
-            for (int j = 0; j < localPrepage; j++) {
-                
-            }
+            int freeIndex = placementPolicy.getNext(this);
+            Page page = p.getPage(j);
+            //just notify the replacement algorithms
+            memory.readPage(page);
+            //prepage desired page
+            putPageInMemory(page, p);
         }
-        
-        
-        
     }
+    
+    
     
     private void sortByPriority(){
         
@@ -134,6 +135,8 @@ public class Simulation implements Swapable {
         return index;
     }
     
+    //must add process to memory
+    //must prepage when a process is added to memory
     public void updateOnMemoryList(int multiProgrammingDegree){
         
         if(this.onMemory.size() < multiProgrammingDegree){
@@ -141,16 +144,22 @@ public class Simulation implements Swapable {
             for(int i = 0; i < toLoad; i++){
                 toLoadIndex = this.getHighestPriorityProcess(this.processes);
                 if(toLoadIndex >= 0){
-                    this.onMemory.add(this.processes.remove(toLoadIndex));
+                    Process loaded = this.processes.remove(toLoadIndex);
+                    this.onMemory.add(loaded);
+                    prepageProcess(loaded);
                 }
             }
         }
+        
         else if(this.onMemory.size() > multiProgrammingDegree){
             int toUnload = this.onMemory.size() - multiProgrammingDegree, toUnloadIndex;
             for(int i = 0; i < toUnload; i++){
                 toUnloadIndex = this.getLowestPriorityProcess(this.onMemory);
                 if(toUnloadIndex >= 0){
-                    this.processes.add(this.onMemory.remove(toUnloadIndex));
+                    
+                    Process unloaded = this.onMemory.remove(toUnloadIndex);
+                    this.processes.add(unloaded);
+                    //this.memory.unloadProcess(unloaded);
                 }
             }
         }
@@ -160,8 +169,11 @@ public class Simulation implements Swapable {
         boolean cleaned = false;
         for(int i = 0; i < this.onMemory.size(); i++){
             if(this.onMemory.get(i).hasFinished()){
-                System.out.println("process:" + this.onMemory.get(i).getId() + " has finished");
+                Process unloaded = this.onMemory.get(i);
+                System.out.println("process:" + unloaded.getId() + " has finished");
                 cleaned = true;
+                //clean this process memory
+                this.memory.unloadProcess(unloaded);
                 this.finished.add(this.onMemory.remove(i));
             }
         }
@@ -233,13 +245,13 @@ public class Simulation implements Swapable {
         if(!process.hasFinished()){
             int next = process.getNext();
             Page page = process.getPage(next);
-            int freeIndex = placementPolicy.getNext(this);
+            
             //System.out.println(freeIndex);
             //System.out.println("n " + next);
             //if there are free pages
             
             //visit page if posible
-            if(memory.readPage(page) && !(scope == ReplacementScope.LOCAL && process.getAvailablePages() < 1)){
+            if(memory.readPage(page)){
                 pageHits++;
                 //System.out.println("Page hit!!");
             //page fault
@@ -247,24 +259,31 @@ public class Simulation implements Swapable {
                 pageFaults++;
                 //System.out.println(pageFaults);
                 //load page
-                if(freeIndex >= 0){
-
-                    MemorySwaper.SwapIn(this, freeIndex, page.getPhysicalPosition());
-
-                //if there are not more free pages
-                //page swap
-                }else{
-                    //execute replacement policy
-                    int swapedIndex = replacementPolicy.fetch(memory, process);
-                    System.out.println("swap "+ swapedIndex + " --- " + page.getPhysicalPosition());
-                    MemorySwaper.SwapIn(this, swapedIndex, page.getPhysicalPosition());
-                }
+                putPageInMemory(page, process);
 
                
             }
             Clock.getInstance().simulate(1);
         }
     }
+    
+    //loads or swaps according to free space on ram
+    public void putPageInMemory(Page page, Process process){
+        int freeIndex = placementPolicy.getNext(this);
+        if(freeIndex >= 0 && (scope == ReplacementScope.GLOBAL || process.getAvailablePages() > 0)){
+
+            MemorySwaper.SwapIn(this, freeIndex, page.getPhysicalPosition());
+
+            //if there are not more free pages
+            //page swap
+        }else{
+            //execute replacement policy
+            int swapedIndex = replacementPolicy.fetch(memory, process);
+            System.out.println("swap "+ swapedIndex + " --- " + page.getPhysicalPosition());
+            MemorySwaper.SwapIn(this, swapedIndex, page.getPhysicalPosition());
+        }
+    }
+    
 
     public int getPageFaults() {
         return pageFaults;

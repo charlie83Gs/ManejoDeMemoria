@@ -19,6 +19,7 @@ public class BackingStore implements Writable {
         this.size = size;
         this.profile = profile;
         this.pages = new Page[Math.abs(size/profile.getSize())];
+        System.out.println("created : " + this.pages.length);
     }
 
     public int getSize() {
@@ -37,6 +38,7 @@ public class BackingStore implements Writable {
 
     public Page allocatePage(Process process, int logicalPosition){
         Page newPage = new Page(process,logicalPosition,used);
+        //System.out.println(pages.length);
         pages[used] = newPage;
         used++;
         

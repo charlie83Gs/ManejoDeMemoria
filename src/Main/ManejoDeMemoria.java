@@ -26,12 +26,17 @@ import processing.core.PApplet;
 import processing.event.MouseEvent;
 import g4p_controls.*;
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Random;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -39,12 +44,13 @@ public class ManejoDeMemoria extends PApplet {
     final int PAGE_SIZE = 18;
     float disp = 20;
     float dispSpeed = 40;
-    int width = 900, height = 600;
+    int width = 910, height = 600;
     int multiprogramming = 3;
     boolean loop = false;
     int bgColor = 230;
     
-    String processPath = "procesos.txt", fetchListPath = "fetchlist.txt";
+    String processPath = "procesos.txt",
+            fetchListPath = "fetchlist.txt";
     
     Simulation sim = null;
     GDropList fetchPolicyPicker,
@@ -55,12 +61,35 @@ public class ManejoDeMemoria extends PApplet {
             CleaningPolicyPicker,
             LoadControlPicker;
     
-    GButton configButt, nextButt, resetButt, fullSimulation, cancelarBtn;
-    GTextArea processesInfo;
+    GButton configButt,
+            nextButt,
+            resetButt,
+            fullSimulation,
+            cancelarBtn;
+    
+    GButton helpProcessesInfo,
+            helpConfig,
+            helpIdProcess,
+            helpIterations,
+            helpNextSetp,
+            helpReset,
+            helpFullSimulation,
+            helpStadisticsInfo;
+    
+    GTextArea processesInfo,
+              estadisticInfo;
+    
     GWindow window, initialConfigW;
     GLabel multiText, procPathText, fetchPathText;
-    GTextField memFisicaText, memVirtualText, pagSizeText, processIdText;
+    GTextField memFisicaText,
+            memVirtualText,
+            pagSizeText,
+            processIdText,
+            iterationsText;
         
+    GWindow errWindow;
+    GTextArea errWindowLbl;
+    
     public static void main(String[] args){       
         PApplet.main("Main.ManejoDeMemoria");
     }
@@ -76,16 +105,34 @@ public class ManejoDeMemoria extends PApplet {
         this.cancelarBtn.setVisible(false);
         //initialize items
         configButt = new GButton(this, 10, this.height - 40, 80, 30, "Configuration");
-        nextButt = new GButton(this, 410, this.height - 40, 80, 30, "Next step");
-        resetButt = new GButton(this, this.width - 90, 10, 80, 30, "Reset");
-        fullSimulation = new GButton(this, this.width - 90, this.height - 50, 80, 40, "Full simulation");
-        processIdText = new GTextField(this, 410, this.height - 65, 80, 20);
+        nextButt = new GButton(this, 390, this.height - 40, 80, 30, "Execute");
+        resetButt = new GButton(this, this.width - 110, 10, 80, 30, "Reset");
+        fullSimulation = new GButton(this, this.width - 110, this.height - 50, 80, 40, "Full simulation");
+        processIdText = new GTextField(this, 240, this.height - 65, 80, 20);
+        iterationsText = new GTextField(this, 365, this.height - 65, 80, 20);
+        iterationsText.setText("1");
         processesInfo = new GTextArea(this, 20, 130, 450, 350);
         processesInfo.setEnabled(false);
+        estadisticInfo = new GTextArea(this, 680, 130, 200, 350);
+        estadisticInfo.setEnabled(false);
         
+        //help buttons
+        this.helpProcessesInfo = new GButton(this, 470, 135, 30, 20, "11?");
+        this.helpConfig = new GButton(this, 90, this.height - 40, 30, 20, "12?");
+        this.helpIdProcess = new GButton(this, 325, this.height - 65, 30, 20, "13?"); 
+        this.helpIterations = new GButton(this, 445, this.height - 65, 30, 20, "14?"); 
+        this.helpNextSetp = new GButton(this, 470, this.height - 30, 30, 20, "15?");
+        this.helpReset = new GButton(this, this.width - 30, 10, 30, 20, "16?");
+        this.helpStadisticsInfo = new GButton(this, 875, 135, 30, 20, "17?"); 
+        this.helpFullSimulation = new GButton(this, this.width - 30, this.height - 50, 30, 20, "18?");
         this.setVisibility(false);
        
-        
+        errWindow = GWindow.getWindow(this, "", 750, 400, 300, 150, JAVA2D);
+        errWindow.setActionOnClose(GWindow.KEEP_OPEN);
+        errWindow.setVisible(false);
+        new GButton(this.errWindow, this.errWindow.width - 45, this.errWindow.height - 30, 40, 25, "Ok");
+    
+        errWindowLbl = new GTextArea(errWindow, 0, 0, 300, 150);
         
     }
     
@@ -115,15 +162,20 @@ public class ManejoDeMemoria extends PApplet {
             case "Requests path":
                 selectInput("Seleccione el archivo con la información de los procesos", "fetchPathSelected");
                 break;
-            case "Next step":
-                if(this.isNumeric(this.processIdText.getText()) && sim.isInMemory(Integer.valueOf(this.processIdText.getText()))){
-                    sim = TestSimulation.TestTimeStep(sim, Integer.valueOf(this.processIdText.getText()));
-                    if(this.sim.cleanOnMemoryList()){
-                        this.sim.updateOnMemoryList(this.multiprogramming);
+            case "Execute":
+                if(this.isNumeric(this.processIdText.getText()) 
+                        && this.isNumeric(this.iterationsText.getText())
+                        && sim.isInMemory(Integer.valueOf(this.processIdText.getText()))){
+                    int iterations = Integer.valueOf(this.iterationsText.getText());
+                    for(int i = 0; i < iterations; i++){
+                        sim = TestSimulation.TestTimeStep(sim, Integer.valueOf(this.processIdText.getText()));
+                        if(this.sim.cleanOnMemoryList()){
+                            this.sim.updateOnMemoryList(this.multiprogramming);
+                        }
                     }
                 }
                 else{
-                    this.showPopUpErr("El proceso a ejecutar no está cargado en memoria");
+                    this.showPopUpErr("Error", "El proceso a ejecutar no está cargado en memoria o el numero de iteraciones no > 0");
                 }
                 break;
             case "Full simulation":
@@ -131,7 +183,7 @@ public class ManejoDeMemoria extends PApplet {
                 break;
             case "Guardar":
                 if(false/*this.processPath.equals("") || this.fetchListPath.equals("")*/){
-                    this.showPopUpErr("Debe escoger un path para cargar los procesos y la lista de requests");
+                    this.showPopUpErr("Error", "Debe escoger un path para cargar los procesos y la lista de requests");
                     return;
                 }
                 if(true/*this.isNumeric(this.memFisicaText.getText()) 
@@ -145,7 +197,7 @@ public class ManejoDeMemoria extends PApplet {
                     this.loop = true;
                 }
                 else{
-                    this.showPopUpErr("Los campos de memoria y paginas deben ser numéricos");
+                    this.showPopUpErr("Error", "Los campos de memoria y paginas deben ser numéricos");
                 }
                 break;
             case "Cancelar":
@@ -154,9 +206,65 @@ public class ManejoDeMemoria extends PApplet {
                 this.window.forceClose();
                 break;
             case "Reset":
-                
                 this.disp = 20;
                 this.setUpSim();
+                break;
+            case "Ok":
+                this.errWindow.setVisible(false);
+                break;
+            case "1?":
+                this.showPopUpErr("Info", this.HfetchPolicy);//fetch policy picker
+                break;
+            case "2?":
+                this.showPopUpErr("Info", this.HplacementPolicy);//placement policy
+                break;
+            case "3?":
+                this.showPopUpErr("Info", this.HreplacementPolicy);//replacement policy
+                break;
+            case "4?":
+                this.showPopUpErr("Info", this.HresidentSet);//resident set
+                break;
+            case "5?":
+                this.showPopUpErr("Info", this.HreplacementScope);//replacement scope
+                break;
+            case "6?":
+                this.showPopUpErr("Info", this.Hcleaningpolicy);//cleaning policy
+                break;
+            case "7?":
+                this.showPopUpErr("Info", this.Hmultiprogramming);//multi programming
+                break;
+            case "8?":
+                this.showPopUpErr("Info", this.HPhysicalMemSize);//physical memory size
+                break;
+            case "9?":
+                this.showPopUpErr("Info", this.HVirtualMemSize);//virtual memory size
+                break;
+            case "10?":
+                this.showPopUpErr("Info", this.HPageSize);//page size
+                break;
+            case "11?":
+                this.showPopUpErr("Info", this.HProcessesInfo);//processes info
+                break;
+            case "12?":
+                this.showPopUpErr("Info", this.HConfig);//config butt
+                break;
+            case "13?":
+                this.showPopUpErr("Info", this.HidToExecute);//process id to execute
+                break;
+            case "14?":
+                this.showPopUpErr("Info", this.Hiterations);//iterations to simulate
+                break;
+            case "15?":
+                this.showPopUpErr("Info", this.HExecute);//execute button
+                break;
+            case "16?":
+                this.showPopUpErr("Info", this.HReset);//reset button
+                break;
+            case "17?":
+                this.showPopUpErr("Info", this.HStadisticsInfo);//stadistics info
+                break;
+            case "18?":
+                this.showPopUpErr("Info", this.HFullSimulation);//full simulation
                 break;
         }
     }
@@ -168,13 +276,24 @@ public class ManejoDeMemoria extends PApplet {
         this.fullSimulation.setVisible(visibility);
         this.processesInfo.setVisible(visibility);
         this.processIdText.setVisible(visibility);
+        this.iterationsText.setVisible(visibility);
+        this.estadisticInfo.setVisible(visibility);
+        
+        this.helpConfig.setVisible(visibility);
+        this.helpFullSimulation.setVisible(visibility);
+        this.helpIdProcess.setVisible(visibility);
+        this.helpIterations.setVisible(visibility);
+        this.helpNextSetp.setVisible(visibility);
+        this.helpProcessesInfo.setVisible(visibility);
+        this.helpReset.setVisible(visibility);
+        this.helpStadisticsInfo.setVisible(visibility);
     }
     
     @Override
     public void draw() {
         background(bgColor);
-        multiText.setText("Degree of multiprogramming: " + this.multiprogramming);
-
+        this.multiText.setText("Degree of multiprogramming: " + this.multiprogramming);
+        System.out.println(mouseX + ", " + mouseY);
        
         if(loop){
             displayMemoryArray(sim.getMemory().getPages(),500, 20 + (int)disp);
@@ -185,7 +304,11 @@ public class ManejoDeMemoria extends PApplet {
             text("Replacement scope: " + sim.getScope().toString(), 20, 60);
             text("Replacement policy: " + sim.getReplacementPolicy().toString(), 20, 80);
             text("Degree of multiprogramming: " + this.multiprogramming, 20, 100);
-            text("Process id to execute", 380, this.height - 85, 150, 25);
+            text("Process id to execute", 240, this.height - 85, 150, 25);
+            text("Iterations to simulate", 365, this.height - 85, 150, 25);
+            
+            text("Processes info:", 20, 110, 150, 25);
+            text("Stadistics info:", 680, 110, 150, 25);
             
             this.processesInfo.setText("All processes:" + "\n" +  
                                             this.processListToString(sim.getProcesses()) + "\n \n" + 
@@ -212,13 +335,14 @@ public class ManejoDeMemoria extends PApplet {
     }
     
     public void handleDegree(int val){
-        if(this.sim != null){
-            if(this.multiprogramming > 1 && val < 0){
-                this.multiprogramming = this.multiprogramming + val;
-            }
-            else if(this.multiprogramming < 20 && val > 0){
-                this.multiprogramming = this.multiprogramming + val;
-            }
+        if(this.multiprogramming > 1 && val < 0){
+            this.multiprogramming = this.multiprogramming + val;
+        }
+        else if(this.multiprogramming < 20 && val > 0){
+            this.multiprogramming = this.multiprogramming + val;
+
+        }
+        if(sim != null){
             this.sim.updateOnMemoryList(this.multiprogramming);
         }
     }
@@ -277,12 +401,11 @@ public class ManejoDeMemoria extends PApplet {
         }
     }
     
-    public void showPopUpErr(String message) {
-        GWindow errWindow = GWindow.getWindow(this, "Error", 750, 400, 200, 200, JAVA2D);
-        errWindow.addDrawHandler(this, "config_draw");
-        errWindow.setActionOnClose(GWindow.CLOSE);
-    
-        new GLabel(errWindow, 0, 0, 200, 200, message);
+    public void showPopUpErr(String tittle, String message) {
+        this.errWindow.setVisible(true);
+        this.errWindow.setTitle(tittle);
+        
+        this.errWindowLbl.setText(message);
     }
     
     
@@ -306,8 +429,11 @@ public class ManejoDeMemoria extends PApplet {
         this.fetchPolicyPicker = new GDropList(window, pickerX, pickerY, pickerWidth, pickerHeight,optionsPerPage);
         this.fetchPolicyPicker.setItems(fetchPolicyStrings, 0);
         
-        new GLabel(window, window.width - (pickerX + 220), pickerY, 150, 20, "Physical memory size:");
-        this.memFisicaText = new GTextField(window, window.width - (pickerX + 100), pickerY, 100, 20);
+        new GButton(window, pickerX + pickerWidth, pickerY, 30, 20, "1?");
+        
+        new GLabel(window, window.width - (pickerX + 240), pickerY, 150, 20, "Physical memory size:");
+        this.memFisicaText = new GTextField(window, window.width - (pickerX + 120), pickerY, 100, 20);
+        new GButton(window, window.width - (pickerX + 120) + 100, pickerY, 30, 20, "8?");
         
         pickerY += 50;
         
@@ -317,8 +443,11 @@ public class ManejoDeMemoria extends PApplet {
         this.PlacementPolicyPicker = new GDropList(window, pickerX, pickerY, pickerWidth, pickerHeight, optionsPerPage);
         this.PlacementPolicyPicker.setItems(placementPolicyStrings, 0); 
         
-        new GLabel(window, window.width - (pickerX + 210), pickerY, 150, 20, "Virtual memory size:");
-        this.memVirtualText = new GTextField(window, window.width - (pickerX + 100), pickerY, 100, 20);
+        new GButton(window, pickerX + pickerWidth, pickerY, 30, 20, "2?");
+        
+        new GLabel(window, window.width - (pickerX + 240), pickerY, 150, 20, "Virtual memory size:");
+        this.memVirtualText = new GTextField(window, window.width - (pickerX + 120), pickerY, 100, 20);
+        new GButton(window, window.width - (pickerX + 120) + 100, pickerY, 30, 20, "9?");
         
         pickerY += 50;
         
@@ -328,8 +457,11 @@ public class ManejoDeMemoria extends PApplet {
         this.RepPolicyPicker = new GDropList(window, pickerX, pickerY, pickerWidth, pickerHeight, optionsPerPage);
         this.RepPolicyPicker.setItems(repPolicyStrings, 0); 
         
-        new GLabel(window, window.width - (pickerX + 160), pickerY, 150, 20, "Page size:");
-        this.pagSizeText = new GTextField(window, window.width - (pickerX + 100), pickerY, 100, 20);
+        new GButton(window, pickerX + pickerWidth, pickerY, 30, 20, "3?");
+        
+        new GLabel(window, window.width - (pickerX + 180), pickerY, 150, 20, "Page size:");
+        this.pagSizeText = new GTextField(window, window.width - (pickerX + 120), pickerY, 100, 20);
+        new GButton(window, window.width - (pickerX + 120) + 100, pickerY, 30, 20, "10?");
         
         pickerY += 50;
         
@@ -339,6 +471,8 @@ public class ManejoDeMemoria extends PApplet {
         this.ResidentSetPicker = new GDropList(window, pickerX, pickerY, pickerWidth, pickerHeight,optionsPerPage);
         this.ResidentSetPicker.setItems(residentSetStrings, 0);
         
+        new GButton(window, pickerX + pickerWidth, pickerY, 30, 20, "4?");
+        
         pickerY += 50;
         
         //replacement scope
@@ -346,6 +480,8 @@ public class ManejoDeMemoria extends PApplet {
         new GLabel(window, pickerX, pickerY - 35,300, 50, "Replacement Scope");
         this.RepScopePicker = new GDropList(window, pickerX, pickerY, pickerWidth, pickerHeight,optionsPerPage);
         this.RepScopePicker.setItems(scopeStrings, 0);
+        
+        new GButton(window, pickerX + pickerWidth, pickerY, 30, 20, "5?");
         
         pickerY += 50;
         
@@ -355,11 +491,15 @@ public class ManejoDeMemoria extends PApplet {
         this.CleaningPolicyPicker = new GDropList(window, pickerX, pickerY, pickerWidth, pickerHeight,optionsPerPage);
         this.CleaningPolicyPicker.setItems(cleaningStrings, 0);
         
+        new GButton(window, pickerX + pickerWidth, pickerY, 30, 20, "6?");
+        
         pickerY += 50;
         
         this.multiText = new GLabel(window, pickerX, pickerY - 35, 300, 50, "Degree of multiprogramming: " + this.multiprogramming);
+        new GButton(window, 180, pickerY, 30, 20, "7?");
         new GButton(window, 150, pickerY, 20, 20, "+");
         new GButton(window, 130, pickerY, 20, 20, "-");
+        
         
         pickerY += 45;
         
@@ -371,6 +511,7 @@ public class ManejoDeMemoria extends PApplet {
         this.cancelarBtn = new GButton(window, window.width - 90, window.height - 40, 80, 30, "Cancelar");
         new GButton(window, 0, window.height - 40, 80, 30, "Process path");
         new GButton(window, 90, window.height - 40, 80, 30, "Requests path");
+        
         
         
     }
@@ -416,5 +557,72 @@ public class ManejoDeMemoria extends PApplet {
         return true;
     }
     
+    public static String readFileAsString(String fileName){ 
+        try {
+            String data = "";
+            data = new String(Files.readAllBytes(Paths.get(fileName))); 
+            return data;
+        } catch (IOException ex) {
+            return "";
+        }
+    } 
+    
     public void handleTextEvents(GEditableTextControl textcontrol, GEvent event) { /* code */ }
+    
+    //---------------------------------Strings de ayuda
+    String HfetchPolicy = "Fetch policy dice cómo es que se van a escoger las paginas durante la ejecución:\n" +
+"	demanda: carga la pagina por petición\n" +
+"	prepagin: carga varias paginas a la vez por petición",
+            
+           HplacementPolicy = "",
+            
+           HreplacementPolicy = "",
+            
+           HresidentSet = "",
+            
+           HreplacementScope = "",
+            
+           Hcleaningpolicy = "",
+            
+           Hmultiprogramming = "Indica la cantidad de procesos que pueden estár en memoria a la vez",
+           
+           HPhysicalMemSize = "",
+            
+           HVirtualMemSize = "",
+            
+           HPageSize = "",
+            
+           HProcessesInfo = "Presenta la información de los procesos que no están cargados en memoria, los que están cargados " +
+"en memoria junto con sus requisiciones " +
+"y los que ya terminaron de ejecutar",
+            
+           HConfig = "Lleva a la pantalla de configuración, la cual permite seleccionar " +
+"todos los datos de la simulación, para cambiarlos, debe seleccionar " +
+"guardar, de lo contrario (cancelar) no aplicará los cambios",
+            
+           HidToExecute = "Este campo recibe un número entero mayor a 0 con el id del " +
+"proceso que se desea ejecutar",
+            
+           Hiterations = "Este campo recibe un número entero mayor a 0 con la cantidad " +
+"de iteraciones a simular del proceso seleccionado por id",
+            
+           HReset = "Vuelve a cargar los procesos de los archivos especificados y deja " +
+" la simulación en tiempo 0 para volver a ejecutar",
+           
+           HStadisticsInfo = "Contiene la información actual de la simulación, page faults, hits y " +
+"procentajes de uso de paginas",
+            
+           HFullSimulation = "Simula toda la ejecución de los procesos seleccionando aleatoreamente el " +
+"siguiente proceso a ejecutar en cada iteración hasta terminar",
+            
+           HExecute = "Ejecuta el proceso seleccionado por id la cantidad de iteraciones seleccionadas " +
+"arriba";
+    
+    
+    
+    
+    
+    
+    
+    
 }

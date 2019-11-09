@@ -481,7 +481,7 @@ public class ManejoDeMemoria extends PApplet {
         
         new GButton(window, pickerX + pickerWidth, pickerY, 30, 20, "3?");
         
-        new GLabel(window, window.width - (pickerX + 180), pickerY, 150, 20, "Page size:");
+        new GLabel(window, window.width - (pickerX + 190), pickerY, 150, 20, "Page count:");
         this.pagSizeText = new GTextField(window, window.width - (pickerX + 120), pickerY, 100, 20);
         new GButton(window, window.width - (pickerX + 120) + 100, pickerY, 30, 20, "10?");
         
@@ -592,19 +592,33 @@ public class ManejoDeMemoria extends PApplet {
     public void handleTextEvents(GEditableTextControl textcontrol, GEvent event) { /* code */ }
     
     //---------------------------------Strings de ayuda
-    String HfetchPolicy = "Fetch policy indica cómo es que se van a escoger las paginas durante la ejecución:\n" +
-"	demanda: carga la pagina por petición\n" +
+    String HfetchPolicy = "Fetch policy indica cómo es que se van a escoger las paginas durante la ejecución:\n \n" +
+"	demanda: carga la pagina por petición\n \n" +
 "	prepagin: carga varias paginas a la vez por petición",
             
-           HplacementPolicy = "",
+           HplacementPolicy = "Indica la politica de ubicación de páginas en la memoria:\n" +
+"\n \n" +
+"first available: Ubica la página en el primer campo de memoria libre que se encuentra recorriendo la lista de memoria secuencialmente\n" +
+"\n \n" +
+"next available: Lleva un contador de la última página que se ubicó en la memoria y a la hora de insertar una nueva la inserta en la posición contador+1 y lo incrementa",
             
-           HreplacementPolicy = "Indica el tipo de algoritmo a utilizar cuando hay page-fault",
+           HreplacementPolicy = "Indica cómo se van a reemplazar las páginas a la hora de un page-fault:\n" +
+"\n \n" +
+"LRU: Least Recently Used como lo dice su nombre se basa en reemplazar la página menos recientemente utilizada de la lista de páginas en memoria, puede ser implementado con timestamps\n" +
+"\n \n" +
+"FIFO: First in First out este algoritmo es uno de los más básicos, consiste en reemplazar la primera página que entró a la lista de páginas en memoria\n" +
+"\n \n" +
+"LFU: Least Frequently Used para este algoritmo se reemplaza la página que se ha utilizado menor cantidad de veces, puede ser implementado manteniendo un contador de utilización para cáda página en memoria el cuál se actualiza con cada request\n" +
+"\n \n" +
+"MRU: Most Recently Used es una variación del algoritmo LRU citado anteriormente se basa en reemplazar la página más recientemente utilizada, igualmente puede ser implementado con timestamps\n" +
+"\n \n" +
+"SECOND_CHANCE:",
             
            HresidentSet = "",
             
-           HreplacementScope = "A la hora de que ocurre un page fault hay dos opciones para reemplazar la página\n" +
-"   local: sólo se puede reemplazar una página que pertenezca al proceso que está generando el request\n" +
-"   global: se puede reemplazar una página de cuálquier proceso\n" +
+           HreplacementScope = "A la hora de que ocurre un page fault hay dos opciones para reemplazar la página\n \n" +
+"local: sólo se puede reemplazar una página que pertenezca al proceso que está generando el request\n \n" +
+"global: se puede reemplazar una página de cuálquier proceso\n" +
 "lo anterior partiendo del hecho de que la página a reemplazar será indicada por el\n" +
 "algoritmo de replacement seleccionado",
             
@@ -612,11 +626,11 @@ public class ManejoDeMemoria extends PApplet {
             
            Hmultiprogramming = "Indica la cantidad de procesos que pueden estár en memoria a la vez ejecutando",
            
-           HPhysicalMemSize = "",
+           HPhysicalMemSize = "Indica el tamaño de memoria fisica dentro de la simulación",
             
-           HVirtualMemSize = "",
+           HVirtualMemSize = "Indica el tamaño de memoria virtual dentro de la simulación",
             
-           HPageSize = "",
+           HPageSize = "Dada la cantidad de páginas se divide la memoria () entre dicha cantidad para obtener el tamaño de página a utilizar durante la simulación",
             
            HProcessesInfo = "Presenta la información de los procesos que no están cargados en memoria, los que están cargados " +
 "en memoria junto con sus requisiciones " +

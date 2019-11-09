@@ -23,10 +23,10 @@ public class Process {
     private Random rand = new Random();
     
 
-    public Process(int id, FetchList fetchlist, int pages, int priority,BackingStore store, int totalPages) {
+    public Process(int id, FetchList fetchlist, int memory,int pageSize, int priority,BackingStore store, int totalPages) {
         this.id = id;
         this.fetchlist = fetchlist;
-        this.pages = new Page[pages];
+        this.pages = new Page[(int)Math.ceil((float)memory/pageSize)];
         this.priority = priority;
         this.totalPages = totalPages;
         

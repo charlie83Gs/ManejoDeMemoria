@@ -22,12 +22,24 @@ public class FetchList {
     }
     
     
-    public ArrayList<Integer> getPendingList(){
+    int maxPagesToShow = 10;
+    public String getPendingList(){
         ArrayList<Integer> result = new ArrayList();
-        for(int i = actual; i < usage.length; i++){
+        String restante = "";
+        int toShow;
+        if((usage.length - actual) > maxPagesToShow){
+            toShow = actual + maxPagesToShow;
+            restante = "+" + Integer.toString(usage.length - maxPagesToShow - actual);
+        }
+        else{
+            toShow = usage.length;
+        }
+        
+        for(int i = actual; i < toShow; i++){
             result.add(usage[i]);
         }
-        return result;
+        
+        return result.toString() + restante;
     }
     
     /**

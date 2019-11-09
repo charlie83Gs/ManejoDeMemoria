@@ -27,10 +27,8 @@ public class Simulation implements Swapable {
     int pageFaults = 0;    
     int pageHits = 0;
     
+    boolean precleaning = false;
     
-    
-    
-
 
     
     public Simulation(BackingStore store, MainMemory memory, PlacementPolicy placementPolicy, ReplacementPolicy replacementPolicy, ReplacementScope scope, int multiprograming, int prepaging) {
@@ -177,6 +175,7 @@ public class Simulation implements Swapable {
                 this.finished.add(this.onMemory.remove(i));
             }
         }
+        
         return cleaned;
     }
     
@@ -238,6 +237,16 @@ public class Simulation implements Swapable {
             simulate(this.onMemory.get(processIndex));
     }
     
+    public void preClean(){
+        Page[] pages = memory.getPages();
+        
+        for (Page page : pages) {
+            if(page != null){
+                page.setDirty(false);
+            }
+        }
+    }
+    
     
     //simulate with Process
     public void simulate(Process process){
@@ -259,10 +268,13 @@ public class Simulation implements Swapable {
                 pageFaults++;
                 //System.out.println(pageFaults);
                 //load page
-                putPageInMemory(page, process);
-
-               
+                putPageInMemory(page, process);  
             }
+            //preclean every 5 ciles if enabled
+            int time = Clock.getInstance().getTime();
+            if(time > 0 && time % 5 == 0 && precleaning) preClean();
+            
+            
             Clock.getInstance().simulate(1);
         }
     }
@@ -292,5 +304,15 @@ public class Simulation implements Swapable {
     public int getPageHits() {
         return pageHits;
     }
+
+    public boolean isPrecleaning() {
+        return precleaning;
+    }
+
+    public void setPrecleaning(boolean precleaning) {
+        this.precleaning = precleaning;
+    }
+    
+    
     
 }

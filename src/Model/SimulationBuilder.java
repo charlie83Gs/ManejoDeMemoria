@@ -23,6 +23,7 @@ public class SimulationBuilder {
     int memory;
     int prepaging;
     int multiprograming;
+    boolean precleaning ;
     PageProfile profile;
     PlacementPolicy placementPolicy;
     ReplacementScope replacementScope = ReplacementScope.GLOBAL;
@@ -37,6 +38,7 @@ public class SimulationBuilder {
         setReplacementScope(replacementScope);
         prepaging = 0;
         multiprograming = 3;
+        precleaning = false;
     }
     
     
@@ -105,6 +107,12 @@ public class SimulationBuilder {
     public void setMultiprograming(int multiprograming) {
         this.multiprograming = multiprograming;
     }
+
+    public void setPrecleaning(boolean precleaning) {
+        this.precleaning = precleaning;
+    }
+    
+    
     
     
     
@@ -117,8 +125,8 @@ public class SimulationBuilder {
         MainMemory memoryObject = new MainMemory(memory, profile);
         ReplacementPolicy replacementPolicyObject = getReplacementPolicy(memoryObject);
         
-        
-        return new Simulation(storeObject, memoryObject, placementPolicy,replacementPolicyObject,replacementScope,multiprograming,prepaging);
-        
+        Simulation sim =  new Simulation(storeObject, memoryObject, placementPolicy,replacementPolicyObject,replacementScope,multiprograming,prepaging);
+        sim.setPrecleaning(precleaning);
+        return sim;
     }
 }

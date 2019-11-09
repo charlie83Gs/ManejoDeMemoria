@@ -57,10 +57,10 @@ public class TestSimulation {
 
         Simulation sim = simBuilder.getResult();
         
-        for (int i=0; i<process.length; i++) 
+        /*for (int i=0; i<process.length; i++) 
         { 
             process[i] = new Process(i,FetchList.CreateRandomFetchList(2000, 20),PAGES,2,sim.getStore(),10);
-        }
+        }*/
             
         //simulate 4000 memory swaps
         Random r=new Random();

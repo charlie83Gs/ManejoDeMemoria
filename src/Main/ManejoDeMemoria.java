@@ -525,7 +525,7 @@ public class ManejoDeMemoria extends PApplet {
         new GButton(window, pickerX + pickerWidth, pickerY, 30, 20, "1?");
         
         new GLabel(window, window.width - (pickerX + 240), pickerY, 150, 20, "Physical memory size:");
-        this.memFisicaText = new GTextField(window, window.width - (pickerX + 120), pickerY, 100, 20);this.memFisicaText.setText("8192");
+        this.memFisicaText = new GTextField(window, window.width - (pickerX + 120), pickerY, 100, 20);this.memFisicaText.setText("4096");
         new GButton(window, window.width - (pickerX + 120) + 100, pickerY, 30, 20, "8?");
 
         
@@ -541,7 +541,7 @@ public class ManejoDeMemoria extends PApplet {
         new GButton(window, pickerX + pickerWidth, pickerY, 30, 20, "2?");
         
         new GLabel(window, window.width - (pickerX + 240), pickerY, 150, 20, "Virtual memory size:");
-        this.memVirtualText = new GTextField(window, window.width - (pickerX + 120), pickerY, 100, 20);this.memVirtualText.setText("4096");
+        this.memVirtualText = new GTextField(window, window.width - (pickerX + 120), pickerY, 100, 20);this.memVirtualText.setText("8192");
         new GButton(window, window.width - (pickerX + 120) + 100, pickerY, 30, 20, "9?");
 
         

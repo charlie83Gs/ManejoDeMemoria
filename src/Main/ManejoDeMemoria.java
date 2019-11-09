@@ -147,6 +147,7 @@ public class ManejoDeMemoria extends PApplet {
         new GButton(this.manualWindow, this.manualWindow.width - 45, this.manualWindow.height - 30, 40, 25, "Ok");
     
         infoManual = new GTextArea(manualWindow, 0, 0, 700, 800);
+        infoManual.setText(this.ManualDeUsuario);
         infoManual.setEnabled(false);
         
         
@@ -171,6 +172,7 @@ public class ManejoDeMemoria extends PApplet {
         for (Process newProcess : newProcesses) {
             newProcess.setTotalPages(residentSet);
         }
+       
         
         sim.setProcesses(newProcesses);
         
@@ -743,7 +745,45 @@ public class ManejoDeMemoria extends PApplet {
             
            HExecute = "Ejecuta el proceso seleccionado por id la cantidad de iteraciones seleccionadas " +
 "arriba",
-           ManualDeUsuario = "";
+           ManualDeUsuario = 
+"Aspectos importantes:\n" +
+"\n \n" +
+"-La medida utilizada en toda la aplicación es en bytes por default\n" +
+"\n \n" +
+"-Para prepaginación por default se está utilizando 3 páginas, si el resident set es menor a 3 la cantidad de páginas que se cargan será igual al resident set indicado\n" +
+"\n \n" +
+"-Se utiliza un random de 50% a la hora de hacer acceso a una página que indicará si esta queda dirty, lo cual se verá reflejado en la interfaz con un * al final de la página correspondiente\n" +
+"\n \n" +
+"-Se le asigna un color aleatorio a cada proceso el cual pintará las páginas que pertenecen a dicho proceso\n" +
+"\n \n" +
+"-La memoria física tiene que ser mayor a la suma del tamaño de los procesos\n" +
+"\n" +
+"-La cantidad de páginas indicadas en el archivo de procesos para cada proceso debe ser\n" +
+" mayor al page size indicado en la parte de configuración\n" +
+"\n" +
+"Uso de la aplicación:\n" +
+"\n" +
+"La mayoría de los componentes tienen un botón de ayuda con un número seguido de un “?” que al ser clickeado abre una ventana que describe lo que hace el componente.\n" +
+"\n" +
+"1- Al ejecutar la aplicación se abrirá la ventana de configuración, en esta ventana vienen todas las políticas de configuración disponibles para que el usuario pueda seleccionar el comportamiento que quiere dentro de la simulación, posteriormente se pide cargar los archivos de procesos y de requests los cuales deben tener formato json. Después de seleccionar los parámetros iniciales a la aplicación junto con los archivos a cargar, el usuario podrá seleccionar el botón de guardar para iniciar con la simulación.\n" +
+"\n" +
+"2- Después de guardar o volver de la ventana de configuración, el usuario podrá:\n" +
+"\n" +
+"2.1 - Seleccionar un proceso por id y n número de iteraciones a ejecutar para ese proceso y así para cada proceso\n" +
+"\n" +
+"2.2 - Resetear el programa lo que vuelve a cargar los archivos y los settings seleccionados al principio y deja la simulación en tiempo 0.\n" +
+"\n" +
+"2.3 - Realizar la simulación completa con el botón de full simulation lo que seleccionará un proceso random para ejecutar un request en cada iteración hasta terminar y mostrará el resultado.\n" +
+"\n" +
+"3 - Dentro de la ventana de simulación el usuario podrá ver en todo momento:\n" +
+"\n" +
+"	3.1 - La configuración seleccionada en la ventana de configuración\n" +
+"\n" +
+"3.2 - La información de todos los procesos, los que están en memoria, los que no y lo s que ya finalizaron\n" +
+"\n" +
+"3.3 - Información de estadísticas, page faults, page hits, porcentaje de utilización de página, número total de accesos\n" +
+"\n" +
+"3.4 - La localización de las páginas tanto en la memoria como en el backing store";
     
     
     

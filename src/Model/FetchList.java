@@ -27,9 +27,9 @@ public class FetchList {
         ArrayList<Integer> result = new ArrayList();
         String restante = "";
         int toShow;
-        if(usage.length > maxPagesToShow){
-            toShow = maxPagesToShow;
-            restante = "+" + Integer.toString(usage.length - maxPagesToShow);
+        if((usage.length - actual) > maxPagesToShow){
+            toShow = actual + maxPagesToShow;
+            restante = "+" + Integer.toString(usage.length - maxPagesToShow - actual);
         }
         else{
             toShow = usage.length;

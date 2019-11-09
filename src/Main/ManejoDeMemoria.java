@@ -39,6 +39,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import sun.java2d.cmm.Profile;
 
 public class ManejoDeMemoria extends PApplet {
     final int PAGE_SIZE = 18;
@@ -81,6 +82,7 @@ public class ManejoDeMemoria extends PApplet {
     
     GWindow window, initialConfigW;
     GLabel multiText, procPathText, fetchPathText;
+
     GTextField memFisicaText,
             memVirtualText,
             pagSizeText,
@@ -147,12 +149,27 @@ public class ManejoDeMemoria extends PApplet {
         
         
     }
-    
+    //the new sim is created here
     public void setUpSim(){
         Clock.getInstance().resetTime();
-        sim = new TestSimulation().getSimulation();
-        sim.setProcesses(this.loadProcesses(sim.getStore()));
+        
+        
+        
+        //sim = new TestSimulation().getSimulation();
+        sim = builder.getResult();
+        
+        //update resident size for each process
+        ArrayList<Process> newProcesses = this.loadProcesses(sim.getStore());
+        //!ATENTION 
+        //must use resident size instead of 3
+        for (Process newProcess : newProcesses) {
+            newProcess.setTotalPages(3);
+        }
+        
+        sim.setProcesses(newProcesses);
+        
         sim.updateOnMemoryList(this.multiprogramming);
+        
     }
     
     public void handleButtonEvents(GButton button, GEvent event) {
@@ -208,8 +225,9 @@ public class ManejoDeMemoria extends PApplet {
                             && this.isNumeric(this.pagSizeText.getText())*/){  
                     
                     this.setVisibility(true);
-                    this.setUpSim();
                     this.setConfig();
+                    this.setUpSim();
+                    
                     this.window.forceClose();
                     this.loop = true;
                 }
@@ -377,13 +395,40 @@ public class ManejoDeMemoria extends PApplet {
         return result;
     }
     
+    //builder is configured here
     public void setConfig(){
         
-        SimulationBuilder simBuilder =new SimulationBuilder();
-        sim.setScope(ReplacementScope.valueOf(RepScopePicker.getSelectedText()));
-        sim.setPlacementPolicy(simBuilder.getPlacementPolicy(PlacementPolicyType.valueOf(PlacementPolicyPicker.getSelectedText())));
-        simBuilder.setReplacementPolicy(ReplacementPolicyType.valueOf(RepPolicyPicker.getSelectedText()));
-        sim.setReplacementPolicy(simBuilder.getReplacementPolicy(sim.getMemory()));
+        builder = new SimulationBuilder();
+        ReplacementScope scope = ReplacementScope.valueOf(RepScopePicker.getSelectedText());
+        PlacementPolicyType placementPolicy = PlacementPolicyType.valueOf(PlacementPolicyPicker.getSelectedText());
+        ReplacementPolicyType replacementPolicy = ReplacementPolicyType.valueOf(RepPolicyPicker.getSelectedText());
+        int pageSize = Integer.parseInt(pagSizeText.getText());
+        int memorySize = Integer.parseInt(memFisicaText.getText());
+        int backingStoreSize = Integer.parseInt(memVirtualText.getText());
+        
+        System.out.println("page -> " + pagSizeText.getText() + " -> " + pageSize);
+        System.out.println("memory -> " + memFisicaText.getText() + " -> " + memorySize);
+        System.out.println("store -> " + memVirtualText.getText() + " -> " + backingStoreSize);
+        
+        PageProfile profile = new PageProfile(pageSize);
+        
+        builder.setPlacementPolicy(placementPolicy);
+        builder.setReplacementScope(scope);
+        builder.setReplacementPolicy(replacementPolicy);
+        builder.setProfile(profile);
+        builder.setMemory(memorySize);
+        builder.setStore(backingStoreSize);
+        //!ATTENTION must get prepagin value from memory
+        builder.setPrepaging(2);
+        
+        
+        
+        //SimulationBuilder simBuilder =new SimulationBuilder();
+        //sim.setScope(scope);
+        //sim.setPlacementPolicy(simBuilder.getPlacementPolicy(placementPolicy));
+        //simBuilder.setReplacementPolicy(replacementPolicy);
+        //sim.setReplacementPolicy(simBuilder.getReplacementPolicy(sim.getMemory()));
+        
         
     }
     
@@ -451,11 +496,13 @@ public class ManejoDeMemoria extends PApplet {
         this.fetchPolicyPicker = new GDropList(window, pickerX, pickerY, pickerWidth, pickerHeight,optionsPerPage);
         this.fetchPolicyPicker.setItems(fetchPolicyStrings, 0);
         
+
         new GButton(window, pickerX + pickerWidth, pickerY, 30, 20, "1?");
         
         new GLabel(window, window.width - (pickerX + 240), pickerY, 150, 20, "Physical memory size:");
         this.memFisicaText = new GTextField(window, window.width - (pickerX + 120), pickerY, 100, 20);
         new GButton(window, window.width - (pickerX + 120) + 100, pickerY, 30, 20, "8?");
+
         
         pickerY += 50;
         
@@ -465,11 +512,13 @@ public class ManejoDeMemoria extends PApplet {
         this.PlacementPolicyPicker = new GDropList(window, pickerX, pickerY, pickerWidth, pickerHeight, optionsPerPage);
         this.PlacementPolicyPicker.setItems(placementPolicyStrings, 0); 
         
+
         new GButton(window, pickerX + pickerWidth, pickerY, 30, 20, "2?");
         
         new GLabel(window, window.width - (pickerX + 240), pickerY, 150, 20, "Virtual memory size:");
         this.memVirtualText = new GTextField(window, window.width - (pickerX + 120), pickerY, 100, 20);
         new GButton(window, window.width - (pickerX + 120) + 100, pickerY, 30, 20, "9?");
+
         
         pickerY += 50;
         
@@ -479,11 +528,13 @@ public class ManejoDeMemoria extends PApplet {
         this.RepPolicyPicker = new GDropList(window, pickerX, pickerY, pickerWidth, pickerHeight, optionsPerPage);
         this.RepPolicyPicker.setItems(repPolicyStrings, 0); 
         
+
         new GButton(window, pickerX + pickerWidth, pickerY, 30, 20, "3?");
         
         new GLabel(window, window.width - (pickerX + 180), pickerY, 150, 20, "Page size:");
         this.pagSizeText = new GTextField(window, window.width - (pickerX + 120), pickerY, 100, 20);
         new GButton(window, window.width - (pickerX + 120) + 100, pickerY, 30, 20, "10?");
+
         
         pickerY += 50;
         

@@ -25,8 +25,11 @@ public class MRU implements ReplacementPolicy, Observer<Page>{
     
     @Override
     public int fetch(MainMemory men, Process proc) {
-        Page recentPage = getMostRecentlyUsed();
-        return Arrays.asList(men.getPages()).indexOf(recentPage);
+        Page recentPage = getMostRecentlyUsed(proc);
+        
+        int index = Arrays.asList(men.getPages()).indexOf(recentPage);
+        if(index == -1) return fetch(men,proc);
+        return index;
     }
 
     @Override
@@ -35,9 +38,16 @@ public class MRU implements ReplacementPolicy, Observer<Page>{
         mostRecentyUsed.add(object);
     }
     
-    public Page getMostRecentlyUsed(){
+    public Page getMostRecentlyUsed(Process proc){
         //get the prcess before current execution
         //currently visited page is alredy on memory
+        for (int i = mostRecentyUsed.size() - 2; i >= 0 ; i--) {
+            Page page = mostRecentyUsed.get(i);
+            if(page.getOwner().getPriority() >= proc.getPriority()){
+                return page;
+            }
+        }
+        
         return mostRecentyUsed.get(mostRecentyUsed.size()-2);
     }
     

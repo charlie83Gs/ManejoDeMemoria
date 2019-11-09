@@ -42,6 +42,8 @@ public class MainMemory implements Writable , Observable<Page>{
     }
     
     
+    
+    
 
     @Override
     public Page getPage(int index) {
@@ -53,6 +55,17 @@ public class MainMemory implements Writable , Observable<Page>{
         pages[index] = page;
         //send a signal that this page was modified
         notifySwap(page);
+    }
+    
+    public void unloadProcess(Process p){
+        for (int i = 0; i < pages.length; i++) {
+            Page page = pages[i];
+            if(page != null && page.getOwner() == p){
+                //remove page of process
+                pages[i] = null;
+            }
+            
+        }
     }
     
     public int getAvailable(){
@@ -109,6 +122,7 @@ public class MainMemory implements Writable , Observable<Page>{
         boolean res = 0 <= Arrays.asList(pages).indexOf(page);
         //notify a read executed to this page
         notifyAcess(page);
+        //System.out.println("not" + page.getOwner().getId());
         //if page is on memory visit it 
         if(res){
             
@@ -120,7 +134,12 @@ public class MainMemory implements Writable , Observable<Page>{
     
     
     public Page getRandomPage(){
+        
+        
         int next = (int)(Math.random() * (pages.length-1));
+        while(pages[next] == null){
+            next = (int)(Math.random() * (pages.length-1));
+        }
         
         return pages[next];
     }

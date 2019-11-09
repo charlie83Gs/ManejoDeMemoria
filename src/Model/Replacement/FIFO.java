@@ -30,9 +30,15 @@ public class FIFO implements ReplacementPolicy, Observer<Page>{
     @Override
     public int fetch(MainMemory men, Process proc) {
         MainMemory memory = men;
-        Page nextPage = pages.remove();
+        Page nextPage = getNext(proc);
+        
+
+
         //ineficient search for index
         int index = Arrays.asList(memory.getPages()).indexOf(nextPage);
+        //recursive solution to -1 index
+        if(index == -1) return fetch(men,proc);
+        System.out.println("i ---------> "+ index);
         return index;
     }
 
@@ -42,6 +48,20 @@ public class FIFO implements ReplacementPolicy, Observer<Page>{
         pages.add(object);
         
     }
+    
+    
+    public Page getNext(Process proc){
+        Page[] pageArray = (Page[])pages.toArray(new Page[pages.size()]);
+        for (int i = 0 ; i < pageArray.length  ; i++) {
+            Page page = pageArray[i];
+            if(page.getOwner().getPriority()>= proc.getPriority()){
+                pages.remove(page);
+                return page;
+            }
+        }
+        return pages.remove();
+    }
+    
     
     @Override
     public String toString() {

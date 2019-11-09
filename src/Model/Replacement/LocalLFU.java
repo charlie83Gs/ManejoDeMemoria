@@ -31,13 +31,15 @@ public class LocalLFU implements ReplacementPolicy, Observer<Page>{
         Page[] pages = proc.getPages();
         
         int minUses = -1;
+        int minVisits = Integer.MAX_VALUE;
+
         Page leastUsed = null;
         for(Page page : pages){
             int totalUses = getUses(page,uses);
-            if( totalUses < minUses && totalUses > 0){
-                //System.out.println("uses: " + totalUses);
-
+            int lastVisit = page.getOwner().getLastVisit(page);
+            if( totalUses <= minUses  && lastVisit < minVisits){
                 minUses = totalUses;
+                minVisits = lastVisit;
                 leastUsed = page;
             }
         }

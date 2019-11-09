@@ -26,6 +26,10 @@ public class MemoryTable {
         }
     }
     
+    public MemoryFrame getFrame(Page page){
+        return frames.get(page);
+    }
+    
     public void setFixedSize(int newSize){
         this.size = newSize;
     }

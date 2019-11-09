@@ -39,7 +39,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import sun.java2d.cmm.Profile;
+//import sun.java2d.cmm.Profile;
 
 public class ManejoDeMemoria extends PApplet {
     final int PAGE_SIZE = 18;
@@ -502,7 +502,7 @@ public class ManejoDeMemoria extends PApplet {
         new GButton(window, pickerX + pickerWidth, pickerY, 30, 20, "1?");
         
         new GLabel(window, window.width - (pickerX + 240), pickerY, 150, 20, "Physical memory size:");
-        this.memFisicaText = new GTextField(window, window.width - (pickerX + 120), pickerY, 100, 20);
+        this.memFisicaText = new GTextField(window, window.width - (pickerX + 120), pickerY, 100, 20);this.memFisicaText.setText("8192");
         new GButton(window, window.width - (pickerX + 120) + 100, pickerY, 30, 20, "8?");
 
         
@@ -518,7 +518,7 @@ public class ManejoDeMemoria extends PApplet {
         new GButton(window, pickerX + pickerWidth, pickerY, 30, 20, "2?");
         
         new GLabel(window, window.width - (pickerX + 240), pickerY, 150, 20, "Virtual memory size:");
-        this.memVirtualText = new GTextField(window, window.width - (pickerX + 120), pickerY, 100, 20);
+        this.memVirtualText = new GTextField(window, window.width - (pickerX + 120), pickerY, 100, 20);this.memVirtualText.setText("4096");
         new GButton(window, window.width - (pickerX + 120) + 100, pickerY, 30, 20, "9?");
 
         
@@ -533,8 +533,8 @@ public class ManejoDeMemoria extends PApplet {
 
         new GButton(window, pickerX + pickerWidth, pickerY, 30, 20, "3?");
         
-        new GLabel(window, window.width - (pickerX + 190), pickerY, 150, 20, "Page count:");
-        this.pagSizeText = new GTextField(window, window.width - (pickerX + 120), pickerY, 100, 20);
+        new GLabel(window, window.width - (pickerX + 190), pickerY, 150, 20, "Page size:");
+        this.pagSizeText = new GTextField(window, window.width - (pickerX + 120), pickerY, 100, 20);this.pagSizeText.setText("32");
         new GButton(window, window.width - (pickerX + 120) + 100, pickerY, 30, 20, "10?");
 
         

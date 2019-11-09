@@ -211,7 +211,10 @@ public class ManejoDeMemoria extends PApplet {
                         }
                     }
                     this.estadisticInfo.setText("Page-faults: " + this.sim.getPageFaults() + "\n"
-                                                + "Hits: " + this.sim.getPageHits());
+                                                + "Hits: " + this.sim.getPageHits() + "\n" 
+                                                + "Utilizacion: " + (100 - (float)sim.getMemory().getAvailable()/sim.getMemory().getPages().length*100) + "\n"
+                                                + "Accesos: " + Clock.getInstance().getTime()
+                                                );
                     
                 }
                 else{

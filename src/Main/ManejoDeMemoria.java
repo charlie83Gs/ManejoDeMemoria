@@ -87,8 +87,8 @@ public class ManejoDeMemoria extends PApplet {
             processIdText,
             iterationsText;
         
-    GWindow errWindow;
-    GTextArea errWindowLbl;
+    GWindow errWindow, manualWindow;
+    GTextArea errWindowLbl, infoManual;
     
     public static void main(String[] args){       
         PApplet.main("Main.ManejoDeMemoria");
@@ -104,9 +104,9 @@ public class ManejoDeMemoria extends PApplet {
         this.createWindows();
         this.cancelarBtn.setVisible(false);
         //initialize items
-        configButt = new GButton(this, 10, this.height - 40, 80, 30, "Configuration");
-        nextButt = new GButton(this, 390, this.height - 40, 80, 30, "Execute");
-        resetButt = new GButton(this, this.width - 110, 10, 80, 30, "Reset");
+        configButt = new GButton(this, 10, this.height - 40, 85, 30, "Configuración");
+        nextButt = new GButton(this, 390, this.height - 40, 80, 30, "Ejecutar");
+        resetButt = new GButton(this, this.width - 110, 10, 80, 30, "Resetear");
         fullSimulation = new GButton(this, this.width - 110, this.height - 50, 80, 40, "Full simulation");
         processIdText = new GTextField(this, 240, this.height - 65, 80, 20);
         iterationsText = new GTextField(this, 365, this.height - 65, 80, 20);
@@ -118,7 +118,7 @@ public class ManejoDeMemoria extends PApplet {
         
         //help buttons
         this.helpProcessesInfo = new GButton(this, 470, 135, 30, 20, "11?");
-        this.helpConfig = new GButton(this, 90, this.height - 40, 30, 20, "12?");
+        this.helpConfig = new GButton(this, 95, this.height - 40, 30, 20, "12?");
         this.helpIdProcess = new GButton(this, 325, this.height - 65, 30, 20, "13?"); 
         this.helpIterations = new GButton(this, 445, this.height - 65, 30, 20, "14?"); 
         this.helpNextSetp = new GButton(this, 470, this.height - 30, 30, 20, "15?");
@@ -133,6 +133,15 @@ public class ManejoDeMemoria extends PApplet {
         new GButton(this.errWindow, this.errWindow.width - 45, this.errWindow.height - 30, 40, 25, "Ok");
     
         errWindowLbl = new GTextArea(errWindow, 0, 0, 300, 150);
+        errWindowLbl.setEnabled(false);
+        
+        manualWindow = GWindow.getWindow(this, "Manual de usuario", 600, 100, 700, 800, JAVA2D);
+        manualWindow.setActionOnClose(GWindow.KEEP_OPEN);
+        manualWindow.setVisible(false);
+        new GButton(this.manualWindow, this.manualWindow.width - 45, this.manualWindow.height - 30, 40, 25, "Ok");
+    
+        infoManual = new GTextArea(manualWindow, 0, 0, 700, 800);
+        infoManual.setEnabled(false);
         
     }
     
@@ -151,18 +160,18 @@ public class ManejoDeMemoria extends PApplet {
             case "-":
                 this.handleDegree(-1);
                 break;
-            case "Configuration":
+            case "Configuración":
                 this.loop = true;
                 createWindows();
                 this.setVisibility(false);
                 break;
-            case "Process path":
+            case "Cargar procesos":
                 selectInput("Seleccione el archivo con la información de los procesos", "processPathSelected");
                 break;
-            case "Requests path":
+            case "Cargar requests":
                 selectInput("Seleccione el archivo con la información de los procesos", "fetchPathSelected");
                 break;
-            case "Execute":
+            case "Ejecutar":
                 if(this.isNumeric(this.processIdText.getText()) 
                         && this.isNumeric(this.iterationsText.getText())
                         && sim.isInMemory(Integer.valueOf(this.processIdText.getText()))){
@@ -205,12 +214,16 @@ public class ManejoDeMemoria extends PApplet {
                 this.setVisibility(true);
                 this.window.forceClose();
                 break;
-            case "Reset":
+            case "Resetear":
                 this.disp = 20;
                 this.setUpSim();
                 break;
+            case "Manual de usuario":
+                this.manualWindow.setVisible(true);
+                break;
             case "Ok":
                 this.errWindow.setVisible(false);
+                this.manualWindow.setVisible(false);
                 break;
             case "1?":
                 this.showPopUpErr("Info", this.HfetchPolicy);//fetch policy picker
@@ -293,7 +306,7 @@ public class ManejoDeMemoria extends PApplet {
     public void draw() {
         background(bgColor);
         this.multiText.setText("Degree of multiprogramming: " + this.multiprogramming);
-        System.out.println(mouseX + ", " + mouseY);
+        //System.out.println(mouseX + ", " + mouseY);
        
         if(loop){
             displayMemoryArray(sim.getMemory().getPages(),500, 20 + (int)disp);
@@ -304,17 +317,17 @@ public class ManejoDeMemoria extends PApplet {
             text("Replacement scope: " + sim.getScope().toString(), 20, 60);
             text("Replacement policy: " + sim.getReplacementPolicy().toString(), 20, 80);
             text("Degree of multiprogramming: " + this.multiprogramming, 20, 100);
-            text("Process id to execute", 240, this.height - 85, 150, 25);
-            text("Iterations to simulate", 365, this.height - 85, 150, 25);
+            text("ProcesoId a ejecutar", 240, this.height - 85, 150, 25);
+            text("Iteraciones a simular", 365, this.height - 85, 150, 25);
             
-            text("Processes info:", 20, 110, 150, 25);
-            text("Stadistics info:", 680, 110, 150, 25);
+            text("Información de procesos:", 20, 110, 150, 25);
+            text("Información de estadisticas:", 680, 110, 150, 25);
             
-            this.processesInfo.setText("All processes:" + "\n" +  
+            this.processesInfo.setText("Procesos:" + "\n" +  
                                             this.processListToString(sim.getProcesses()) + "\n \n" + 
-                                        "Processes on memory:" + "\n" + 
+                                        "Procesos en memoria:" + "\n" + 
                                             this.processListToString(sim.getOnMemory()) + "\n \n" + 
-                                        "Finished processes:" + "\n" +
+                                        "Procesos finalizados:" + "\n" +
                                             this.processListToString(sim.getFinished()));
 
         }
@@ -394,9 +407,9 @@ public class ManejoDeMemoria extends PApplet {
             stroke(0);
             rect(x, y + i *PAGE_SIZE - PAGE_SIZE/2, PAGE_SIZE*4,PAGE_SIZE);
             fill(0);
-            String currentText = "empty";
+            String currentText = "vacía";
             if(currentPage!= null) currentText = currentPage.toString();
-            text(i + "->" + currentText, x, 3 + y + i *PAGE_SIZE);
+            text(i + " -> " + currentText, x, 3 + y + i *PAGE_SIZE);
             
         }
     }
@@ -509,10 +522,10 @@ public class ManejoDeMemoria extends PApplet {
         
         new GButton(window, window.width - 180, window.height - 40, 80, 30, "Guardar");
         this.cancelarBtn = new GButton(window, window.width - 90, window.height - 40, 80, 30, "Cancelar");
-        new GButton(window, 0, window.height - 40, 80, 30, "Process path");
-        new GButton(window, 90, window.height - 40, 80, 30, "Requests path");
+        new GButton(window, 0, window.height - 40, 80, 30, "Cargar procesos");
+        new GButton(window, 90, window.height - 40, 80, 30, "Cargar requests");
         
-        
+        new GButton(window, window.width - 85, 10, 80, 30, "Manual de usuario");
         
     }
     
@@ -584,7 +597,7 @@ public class ManejoDeMemoria extends PApplet {
             
            Hcleaningpolicy = "",
             
-           Hmultiprogramming = "Indica la cantidad de procesos que pueden estár en memoria a la vez",
+           Hmultiprogramming = "Indica la cantidad de procesos que pueden estár en memoria a la vez ejecutando",
            
            HPhysicalMemSize = "",
             
@@ -616,7 +629,8 @@ public class ManejoDeMemoria extends PApplet {
 "siguiente proceso a ejecutar en cada iteración hasta terminar",
             
            HExecute = "Ejecuta el proceso seleccionado por id la cantidad de iteraciones seleccionadas " +
-"arriba";
+"arriba",
+           ManualDeUsuario = "";
     
     
     

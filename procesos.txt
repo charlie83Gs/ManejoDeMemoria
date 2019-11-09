@@ -1,22 +1,22 @@
 [
   {
     "id": 1,
-    "pages": 20,
+    "pages": 512,
     "prior": 2
   },
   {
     "id": 2,
-    "pages": 20,
+    "pages": 256,
     "prior": 4
   },
   {
     "id": 3,
-    "pages": 20,
+    "pages": 1024,
     "prior": 1
   },
   {
     "id": 4,
-    "pages": 20,
+    "pages": 512,
     "prior": 1
   }
 ]

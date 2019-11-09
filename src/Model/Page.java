@@ -13,11 +13,20 @@ public class Page {
     private Process owner;
     private int logicalPosition;
     private int physicalPosition;
+    private boolean dirty = false;
 
     public Page(Process owner, int logicalPosition, int physicalPosition) {
         this.owner = owner;
         this.logicalPosition = logicalPosition;
         this.physicalPosition = physicalPosition;
+    }
+
+    public boolean isDirty() {
+        return dirty;
+    }
+
+    public void setDirty(boolean dirty) {
+        this.dirty = dirty;
     }
 
     public Process getOwner() {
@@ -46,6 +55,9 @@ public class Page {
 
     @Override
     public String toString() {
+        if(this.dirty){
+            return "P" + owner.getId() + " : " + logicalPosition + " *";
+        }
         return "P" + owner.getId() + " : " + logicalPosition;
     }
    

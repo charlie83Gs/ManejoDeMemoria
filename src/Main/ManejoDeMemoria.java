@@ -117,13 +117,13 @@ public class ManejoDeMemoria extends PApplet {
         processIdText = new GTextField(this, 240, this.height - 65, 80, 20);
         iterationsText = new GTextField(this, 365, this.height - 65, 80, 20);
         iterationsText.setText("1");
-        processesInfo = new GTextArea(this, 20, 130, 450, 350);
+        processesInfo = new GTextArea(this, 20, 165, 450, 350);
         processesInfo.setEnabled(false);
         estadisticInfo = new GTextArea(this, 680, 130, 200, 350);
         estadisticInfo.setEnabled(false);
         
         //help buttons
-        this.helpProcessesInfo = new GButton(this, 470, 135, 30, 20, "11?");
+        this.helpProcessesInfo = new GButton(this, 470, 165, 30, 20, "11?");
         this.helpConfig = new GButton(this, 95, this.height - 40, 30, 20, "12?");
         this.helpIdProcess = new GButton(this, 325, this.height - 65, 30, 20, "13?"); 
         this.helpIterations = new GButton(this, 445, this.height - 65, 30, 20, "14?"); 
@@ -371,11 +371,14 @@ public class ManejoDeMemoria extends PApplet {
             text("Replacement scope: " + sim.getScope().toString(), 20, 60);
             text("Replacement policy: " + sim.getReplacementPolicy().toString(), 20, 80);
             text("Degree of multiprogramming: " + this.multiprogramming, 20, 100);
+            text("Fetch policy: " + this.fetchPolicyPicker.getSelectedText(), 20, 120);
+            text("Cleaning policy: " + this.CleaningPolicyPicker.getSelectedText(), 20, 140);
+            
             text("ProcesoId a ejecutar", 240, this.height - 85, 150, 25);
             text("Iteraciones a simular", 365, this.height - 85, 150, 25);
             
             
-            text("Información de procesos:", 20, 110, 150, 25);
+            text("Información de procesos:", 20, 145, 150, 25);
             text("Información de estadisticas:", 680, 110, 150, 25);
             
             this.processesInfo.setText("Procesos:" + "\n" +  
@@ -532,7 +535,7 @@ public class ManejoDeMemoria extends PApplet {
         new GButton(window, pickerX + pickerWidth, pickerY, 30, 20, "1?");
         
         new GLabel(window, window.width - (pickerX + 240), pickerY, 150, 20, "Physical memory size:");
-        this.memFisicaText = new GTextField(window, window.width - (pickerX + 120), pickerY, 100, 20);this.memFisicaText.setText("8192");
+        this.memFisicaText = new GTextField(window, window.width - (pickerX + 120), pickerY, 100, 20);this.memFisicaText.setText("4096");
         new GButton(window, window.width - (pickerX + 120) + 100, pickerY, 30, 20, "8?");
 
         
@@ -548,7 +551,7 @@ public class ManejoDeMemoria extends PApplet {
         new GButton(window, pickerX + pickerWidth, pickerY, 30, 20, "2?");
         
         new GLabel(window, window.width - (pickerX + 240), pickerY, 150, 20, "Virtual memory size:");
-        this.memVirtualText = new GTextField(window, window.width - (pickerX + 120), pickerY, 100, 20);this.memVirtualText.setText("4096");
+        this.memVirtualText = new GTextField(window, window.width - (pickerX + 120), pickerY, 100, 20);this.memVirtualText.setText("8192");
         new GButton(window, window.width - (pickerX + 120) + 100, pickerY, 30, 20, "9?");
 
         
@@ -752,45 +755,7 @@ public class ManejoDeMemoria extends PApplet {
             
            HExecute = "Ejecuta el proceso seleccionado por id la cantidad de iteraciones seleccionadas " +
 "arriba",
-           ManualDeUsuario = 
-"Aspectos importantes:\n" +
-"\n \n" +
-"-La medida utilizada en toda la aplicación es en bytes por default\n" +
-"\n \n" +
-"-Para prepaginación por default se está utilizando 3 páginas, si el resident set es menor a 3 la cantidad de páginas que se cargan será igual al resident set indicado\n" +
-"\n \n" +
-"-Se utiliza un random de 50% a la hora de hacer acceso a una página que indicará si esta queda dirty, lo cual se verá reflejado en la interfaz con un * al final de la página correspondiente\n" +
-"\n \n" +
-"-Se le asigna un color aleatorio a cada proceso el cual pintará las páginas que pertenecen a dicho proceso\n" +
-"\n \n" +
-"-La memoria física tiene que ser mayor a la suma del tamaño de los procesos\n" +
-"\n" +
-"-La cantidad de páginas indicadas en el archivo de procesos para cada proceso debe ser\n" +
-" mayor al page size indicado en la parte de configuración\n" +
-"\n" +
-"Uso de la aplicación:\n" +
-"\n" +
-"La mayoría de los componentes tienen un botón de ayuda con un número seguido de un “?” que al ser clickeado abre una ventana que describe lo que hace el componente.\n" +
-"\n" +
-"1- Al ejecutar la aplicación se abrirá la ventana de configuración, en esta ventana vienen todas las políticas de configuración disponibles para que el usuario pueda seleccionar el comportamiento que quiere dentro de la simulación, posteriormente se pide cargar los archivos de procesos y de requests los cuales deben tener formato json. Después de seleccionar los parámetros iniciales a la aplicación junto con los archivos a cargar, el usuario podrá seleccionar el botón de guardar para iniciar con la simulación.\n" +
-"\n" +
-"2- Después de guardar o volver de la ventana de configuración, el usuario podrá:\n" +
-"\n" +
-"2.1 - Seleccionar un proceso por id y n número de iteraciones a ejecutar para ese proceso y así para cada proceso\n" +
-"\n" +
-"2.2 - Resetear el programa lo que vuelve a cargar los archivos y los settings seleccionados al principio y deja la simulación en tiempo 0.\n" +
-"\n" +
-"2.3 - Realizar la simulación completa con el botón de full simulation lo que seleccionará un proceso random para ejecutar un request en cada iteración hasta terminar y mostrará el resultado.\n" +
-"\n" +
-"3 - Dentro de la ventana de simulación el usuario podrá ver en todo momento:\n" +
-"\n" +
-"	3.1 - La configuración seleccionada en la ventana de configuración\n" +
-"\n" +
-"3.2 - La información de todos los procesos, los que están en memoria, los que no y lo s que ya finalizaron\n" +
-"\n" +
-"3.3 - Información de estadísticas, page faults, page hits, porcentaje de utilización de página, número total de accesos\n" +
-"\n" +
-"3.4 - La localización de las páginas tanto en la memoria como en el backing store";
+           ManualDeUsuario = "";
     
     
     

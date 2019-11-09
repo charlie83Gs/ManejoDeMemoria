@@ -80,6 +80,22 @@ public class Simulation implements Swapable {
     
     }
 
+    public int getDegreeOfMultiprograming() {
+        return degreeOfMultiprograming;
+    }
+
+    public void setDegreeOfMultiprograming(int degreeOfMultiprograming) {
+        this.degreeOfMultiprograming = degreeOfMultiprograming;
+    }
+
+    public int getPrepaging() {
+        return prepaging;
+    }
+
+    public void setPrepaging(int prepaging) {
+        this.prepaging = prepaging;
+    }
+
     public ArrayList<Process> getOnMemory() {
         return onMemory;
     }

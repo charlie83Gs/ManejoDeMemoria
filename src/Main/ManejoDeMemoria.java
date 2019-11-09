@@ -423,6 +423,8 @@ public class ManejoDeMemoria extends PApplet {
         //!ATTENTION must get prepagin value from memory
         builder.setPrepaging(2);
         
+        builder.setPrecleaning(CleaningPolicyPicker.getSelectedIndex() == 1);
+        
         
         
         //SimulationBuilder simBuilder =new SimulationBuilder();

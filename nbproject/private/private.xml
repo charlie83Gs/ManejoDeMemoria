@@ -3,9 +3,22 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/J/Documents/GitHub/ManejoDeMemoria/src/Main/TestSimulation.java</file>
-            <file>file:/C:/Users/J/Documents/GitHub/ManejoDeMemoria/src/Main/ManejoDeMemoria.java</file>
-            <file>file:/C:/Users/J/Documents/GitHub/ManejoDeMemoria/src/Model/Simulation.java</file>
+            <file>file:/E:/Workspace/Cursos/2019/Semestre2/Operativos/ManejoDeMemoria/src/Model/SimulationBuilder.java</file>
+            <file>file:/E:/Workspace/Cursos/2019/Semestre2/Operativos/ManejoDeMemoria/src/Model/Process.java</file>
+            <file>file:/E:/Workspace/Cursos/2019/Semestre2/Operativos/ManejoDeMemoria/src/Model/PageProfile.java</file>
+            <file>file:/E:/Workspace/Cursos/2019/Semestre2/Operativos/ManejoDeMemoria/src/InputOutput/FetchListPair.java</file>
+            <file>file:/E:/Workspace/Cursos/2019/Semestre2/Operativos/ManejoDeMemoria/src/Model/MemorySwaper.java</file>
+            <file>file:/E:/Workspace/Cursos/2019/Semestre2/Operativos/ManejoDeMemoria/src/Model/Page.java</file>
+            <file>file:/E:/Workspace/Cursos/2019/Semestre2/Operativos/ManejoDeMemoria/src/Main/TestSimulation.java</file>
+            <file>file:/E:/Workspace/Cursos/2019/Semestre2/Operativos/ManejoDeMemoria/src/InputOutput/FileManager.java</file>
+            <file>file:/E:/Workspace/Cursos/2019/Semestre2/Operativos/ManejoDeMemoria/src/Model/Simulation.java</file>
+            <file>file:/E:/Workspace/Cursos/2019/Semestre2/Operativos/ManejoDeMemoria/src/Model/Replacement/MRU.java</file>
+            <file>file:/E:/Workspace/Cursos/2019/Semestre2/Operativos/ManejoDeMemoria/src/Model/Replacement/LocalMRU.java</file>
+            <file>file:/E:/Workspace/Cursos/2019/Semestre2/Operativos/ManejoDeMemoria/src/Model/Replacement/LFU.java</file>
+            <file>file:/E:/Workspace/Cursos/2019/Semestre2/Operativos/ManejoDeMemoria/src/Model/Swapable.java</file>
+            <file>file:/E:/Workspace/Cursos/2019/Semestre2/Operativos/ManejoDeMemoria/src/Model/MainMemory.java</file>
+            <file>file:/E:/Workspace/Cursos/2019/Semestre2/Operativos/ManejoDeMemoria/src/Main/ManejoDeMemoria.java</file>
+            <file>file:/E:/Workspace/Cursos/2019/Semestre2/Operativos/ManejoDeMemoria/src/Model/NextAvailable.java</file>
         </group>
     </open-files>
 </project-private>

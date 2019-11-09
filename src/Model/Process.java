@@ -44,7 +44,7 @@ public class Process {
         this.memoryTable = new MemoryTable(this.pages);
     }
     
-    public Process(int id, int memory, int pageSize, int priority,BackingStore store, int totalPages) {
+    public Process(int id, int memory, int pageSize, int priority, BackingStore store, int totalPages) {
         this.id = id;
         this.fetchlist = fetchlist;
         this.pages = new Page[(int)Math.ceil((float)memory/pageSize)];

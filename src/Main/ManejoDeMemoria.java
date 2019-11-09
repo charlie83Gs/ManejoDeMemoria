@@ -386,10 +386,10 @@ public class ManejoDeMemoria extends PApplet {
         ArrayList<Model.Process> procesos = null;
         
         if(this.fetchListPath.equals("") || this.processPath.equals("")){
-            procesos = fm.readData("procesos.txt", "fetchlist.txt");
+            procesos = fm.readData("procesos.txt", "fetchlist.txt", Integer.valueOf(this.pagSizeText.getText()));
         }
         else{
-            procesos = fm.readData(this.processPath, this.fetchListPath);
+            procesos = fm.readData(this.processPath, this.fetchListPath, Integer.valueOf(this.pagSizeText.getText()));
         }
         
         return procesos;
@@ -702,10 +702,10 @@ public class ManejoDeMemoria extends PApplet {
             + "en memoria segun el criterio correspondiente",
             
            HreplacementScope = "A la hora de que ocurre un page fault hay dos opciones para reemplazar la página\n \n" +
-"local: sólo se puede reemplazar una página que pertenezca al proceso que está generando el request\n \n" +
+"local: sólo se puede reemplazar una página que pertenezca al proceso que está generando el request esto hace que el resident set pueda ser variable automaticamente para los procesos\n \n" +
 "global: se puede reemplazar una página de cuálquier proceso\n" +
 "lo anterior partiendo del hecho de que la página a reemplazar será indicada por el\n" +
-"algoritmo de replacement seleccionado",
+"algoritmo de replacement seleccionado, esto settea al resident set fixed para los procesos",
             
            Hcleaningpolicy = "Cuando se utiliza on demand las paginas son guardadas al sacarlas de memoria,"
             + "cuando se utiliza pre-cleaning las paginas son guardadas en el backing store cada cierto tiempo",

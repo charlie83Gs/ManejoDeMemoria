@@ -31,8 +31,8 @@ public class FileManager {
         this.store = store;
     }
     
-    public ArrayList<Process> readData(String pathProcesos, String pathFetchList){
-        ArrayList<Process> procesos = this.readProcesos(pathProcesos);
+    public ArrayList<Process> readData(String pathProcesos, String pathFetchList, int pageSize){
+        ArrayList<Process> procesos = this.readProcesos(pathProcesos, pageSize);
         ArrayList<FetchListPair> fetchList = this.readFetchList(pathFetchList);
         
         for(FetchListPair fetchL : fetchList){
@@ -46,7 +46,7 @@ public class FileManager {
         return procesos;
     }
     
-    private ArrayList<Process> readProcesos(String path){
+    private ArrayList<Process> readProcesos(String path, int pageSize){
         BufferedReader br = null;
         String lista = "";
         try {
@@ -72,6 +72,7 @@ public class FileManager {
             tmp = json.getJSONObject(i);
             result.add(new Process(tmp.getInt("id"),
                                     tmp.getInt("pages"),
+                                    pageSize,
                                     tmp.getInt("prior"),
                                     this.store,0));
         }

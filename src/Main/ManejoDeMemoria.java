@@ -665,9 +665,15 @@ public class ManejoDeMemoria extends PApplet {
 "\n \n" +
 "MRU: Most Recently Used es una variación del algoritmo LRU citado anteriormente se basa en reemplazar la página más recientemente utilizada, igualmente puede ser implementado con timestamps\n" +
 "\n \n" +
-"SECOND_CHANCE:",
+"SECOND_CHANCE: Este algoritmo es una extencion del algoritmo FIFO, en el cual las paginas tienen una \n"
+            + "segunda oportunidad, al estar al tope de la cola si tienen la bandera de segunda oportunidad se apaga \n"
+            + "y se envia la pagina al fondo de la cola, si al estar al principio de la cola esta pagina no tiene \n"
+            + "la bandera de segunda oportunidad encendida es remplazada \n",
             
-           HresidentSet = "",
+           HresidentSet = "Asigna una cantidad de memoria maxima para un proceso si \n \n"  +
+           "el replacement scope es local, si este es global el resident set es variable \n \n" +
+            "ya que el algoritmo de remplazo selecionara una pagina de entre todas las paginas \n \n "
+            + "en memoria segun el criterio correspondiente",
             
            HreplacementScope = "A la hora de que ocurre un page fault hay dos opciones para reemplazar la página\n \n" +
 "local: sólo se puede reemplazar una página que pertenezca al proceso que está generando el request\n \n" +
@@ -675,7 +681,8 @@ public class ManejoDeMemoria extends PApplet {
 "lo anterior partiendo del hecho de que la página a reemplazar será indicada por el\n" +
 "algoritmo de replacement seleccionado",
             
-           Hcleaningpolicy = "",
+           Hcleaningpolicy = "Cuando se utiliza on demand las paginas son guardadas al sacarlas de memoria,"
+            + "cuando se utiliza pre-cleaning las paginas son guardadas en el backing store cada cierto tiempo",
             
            Hmultiprogramming = "Indica la cantidad de procesos que pueden estár en memoria a la vez ejecutando",
            

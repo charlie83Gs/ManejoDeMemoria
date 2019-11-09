@@ -26,6 +26,9 @@ public class MemorySwaper {
             //update page status on owner process
             oldPage.getOwner().pageStore(oldPage);
             
+            //clean
+            oldPage.setDirty(false);
+            
             //System.out.println("swaping");
         }
         //udate process table on owner process

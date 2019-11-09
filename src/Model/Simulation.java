@@ -27,12 +27,6 @@ public class Simulation implements Swapable {
     int pageFaults = 0;    
     int pageHits = 0;
     
-    
-    
-    
-
-
-    
     public Simulation(BackingStore store, MainMemory memory, PlacementPolicy placementPolicy, ReplacementPolicy replacementPolicy, ReplacementScope scope, int multiprograming, int prepaging) {
         this.store = store;
         this.memory = memory;

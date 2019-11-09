@@ -51,7 +51,6 @@ public class Process {
         this.priority = priority;
         this.totalPages = totalPages;
         
-        
         for (int i = 0; i < this.pages.length; i++) {
            this.pages[i] = store.allocatePage(this, i); // storing random integers in an array
         

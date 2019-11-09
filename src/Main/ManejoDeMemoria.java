@@ -46,7 +46,7 @@ public class ManejoDeMemoria extends PApplet {
     float disp = 20;
     float dispSpeed = 40;
     int width = 910, height = 600;
-    int multiprogramming = 3;
+    int multiprogramming = 3, residentSet = 3;
     boolean loop = false;
     int bgColor = 230;
     
@@ -81,13 +81,14 @@ public class ManejoDeMemoria extends PApplet {
               estadisticInfo;
     
     GWindow window, initialConfigW;
-    GLabel multiText, procPathText, fetchPathText;
+    GLabel multiText, residentSetText, procPathText, fetchPathText;
 
     GTextField memFisicaText,
             memVirtualText,
             pagSizeText,
             processIdText,
-            iterationsText;
+            iterationsText,
+            residentSetTextInput;
         
     GWindow errWindow, manualWindow;
     GTextArea errWindowLbl, infoManual;
@@ -164,8 +165,11 @@ public class ManejoDeMemoria extends PApplet {
         ArrayList<Process> newProcesses = this.loadProcesses(sim.getStore());
         //!ATENTION 
         //must use resident size instead of 3
+        if(this.residentSetTextInput.getText() != ""){
+            this.residentSet = Integer.valueOf(this.residentSetTextInput.getText());
+        }
         for (Process newProcess : newProcesses) {
-            newProcess.setTotalPages(3);
+            newProcess.setTotalPages(residentSet);
         }
         
         sim.setProcesses(newProcesses);
@@ -218,13 +222,17 @@ public class ManejoDeMemoria extends PApplet {
                                                 + "Hits: " + this.sim.getPageHits());
                 break;
             case "Guardar":
-                if(false/*this.processPath.equals("") || this.fetchListPath.equals("")*/){
+                if(this.processPath.equals("") || this.fetchListPath.equals("")){
                     this.showPopUpErr("Error", "Debe escoger un path para cargar los procesos y la lista de requests");
                     return;
                 }
-                if(true/*this.isNumeric(this.memFisicaText.getText()) 
+                if(this.isNumeric(this.memFisicaText.getText()) 
                             && this.isNumeric(this.memVirtualText.getText()) 
-                            && this.isNumeric(this.pagSizeText.getText())*/){  
+                            && this.isNumeric(this.pagSizeText.getText())){  
+                    if(this.RepScopePicker.getSelectedText().equals("LOCAL") && !this.isNumeric(this.residentSetTextInput.getText())){
+                        this.showPopUpErr("Error", "Cuando el replacement scope es local hay que indicar una cantidad al resident set");
+                        return;
+                    }
                     
                     this.setVisibility(true);
                     this.setConfig();
@@ -335,7 +343,17 @@ public class ManejoDeMemoria extends PApplet {
     public void draw() {
         background(bgColor);
         this.multiText.setText("Degree of multiprogramming: " + this.multiprogramming);
-        //System.out.println(mouseX + ", " + mouseY);
+        
+        if(this.RepScopePicker.getSelectedText().equals("GLOBAL")){
+            this.residentSetText.setText("Resident set: fixed");
+            this.residentSetTextInput.setVisible(false);
+        }
+        else{
+            this.residentSetText.setText("Resident set: variable");
+            this.residentSetTextInput.setVisible(true);
+        }
+        
+        //System.out.println(this.window.mouseX + ", " + this.window.mouseY);
        
         if(loop){
             displayMemoryArray(sim.getMemory().getPages(),500, 20 + (int)disp);
@@ -348,6 +366,7 @@ public class ManejoDeMemoria extends PApplet {
             text("Degree of multiprogramming: " + this.multiprogramming, 20, 100);
             text("ProcesoId a ejecutar", 240, this.height - 85, 150, 25);
             text("Iteraciones a simular", 365, this.height - 85, 150, 25);
+            
             
             text("Información de procesos:", 20, 110, 150, 25);
             text("Información de estadisticas:", 680, 110, 150, 25);
@@ -539,7 +558,7 @@ public class ManejoDeMemoria extends PApplet {
 
         
         pickerY += 50;
-        
+        /*
         //residentSet
         List<String> residentSetStrings = Arrays.asList("Fixed", "Variable");
         new GLabel(window, pickerX, pickerY - 35,300, 50, "Resident set management");
@@ -549,7 +568,7 @@ public class ManejoDeMemoria extends PApplet {
         new GButton(window, pickerX + pickerWidth, pickerY, 30, 20, "4?");
         
         pickerY += 50;
-        
+        */
         //replacement scope
         List<String> scopeStrings = Stream.of(ReplacementScope.values()).map(Enum::name).collect(Collectors.toList());
         new GLabel(window, pickerX, pickerY - 35,300, 50, "Replacement Scope");
@@ -557,6 +576,10 @@ public class ManejoDeMemoria extends PApplet {
         this.RepScopePicker.setItems(scopeStrings, 0);
         
         new GButton(window, pickerX + pickerWidth, pickerY, 30, 20, "5?");
+        
+        residentSetTextInput = new GTextField(window, 200, 200, 100, 20);
+        residentSetTextInput.setText(Integer.toString(this.residentSet));
+        
         
         pickerY += 50;
         
@@ -571,6 +594,7 @@ public class ManejoDeMemoria extends PApplet {
         pickerY += 50;
         
         this.multiText = new GLabel(window, pickerX, pickerY - 35, 300, 50, "Degree of multiprogramming: " + this.multiprogramming);
+        this.residentSetText = new GLabel(window, 200, 170, 300, 50, "Resident set: ");
         new GButton(window, 180, pickerY, 30, 20, "7?");
         new GButton(window, 150, pickerY, 20, 20, "+");
         new GButton(window, 130, pickerY, 20, 20, "-");

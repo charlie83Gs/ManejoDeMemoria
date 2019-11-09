@@ -92,6 +92,8 @@ public class ManejoDeMemoria extends PApplet {
     GWindow errWindow, manualWindow;
     GTextArea errWindowLbl, infoManual;
     
+    SimulationBuilder builder;
+    
     public static void main(String[] args){       
         PApplet.main("Main.ManejoDeMemoria");
     }

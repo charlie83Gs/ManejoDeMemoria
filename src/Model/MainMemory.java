@@ -61,6 +61,7 @@ public class MainMemory implements Writable , Observable<Page>{
         for (int i = 0; i < pages.length; i++) {
             Page page = pages[i];
             if(page != null && page.getOwner() == p){
+                page.setDirty(false);
                 //remove page of process
                 pages[i] = null;
             }

@@ -147,7 +147,7 @@ public class ManejoDeMemoria extends PApplet {
         new GButton(this.manualWindow, this.manualWindow.width - 45, this.manualWindow.height - 30, 40, 25, "Ok");
     
         infoManual = new GTextArea(manualWindow, 0, 0, 700, 800);
-        infoManual.setText(this.ManualDeUsuario);
+        infoManual.setText("");
         infoManual.setEnabled(false);
         
         
@@ -210,9 +210,11 @@ public class ManejoDeMemoria extends PApplet {
                             this.sim.updateOnMemoryList(this.multiprogramming);
                         }
                     }
-                    this.estadisticInfo.setText("Page-faults: " + this.sim.getPageFaults() + "\n"
+                    int allPages = sim.getMemory().getPages().length*100;
+                    this.estadisticInfo.setText( "Page-faults: " + this.sim.getPageFaults() + "\n"
                                                 + "Hits: " + this.sim.getPageHits() + "\n" 
-                                                + "Utilizacion: " + (100 - (float)sim.getMemory().getAvailable()/sim.getMemory().getPages().length*100) + "\n"
+                                                + "Faults(%) :" + (float)this.sim.getPageFaults()/(Clock.getInstance().getTime())*100 + "%\n"
+                                                + "Utilizacion: " + (100 - (float)sim.getMemory().getAvailable()/allPages) + "%" + "\n"
                                                 + "Accesos: " + Clock.getInstance().getTime()
                                                 );
                     
@@ -445,7 +447,9 @@ public class ManejoDeMemoria extends PApplet {
         builder.setMemory(memorySize);
         builder.setStore(backingStoreSize);
         //!ATTENTION must get prepagin value from memory
-        builder.setPrepaging(3);
+        int prepaging = 3;
+        if(fetchPolicyPicker.getSelectedIndex() == 0) prepaging = 0;  
+        builder.setPrepaging(prepaging);
         
         builder.setPrecleaning(CleaningPolicyPicker.getSelectedIndex() == 1);
         

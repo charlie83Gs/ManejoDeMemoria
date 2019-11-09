@@ -35,7 +35,7 @@ public class SecondChance implements ReplacementPolicy, Observer<Page>{
     public int fetch(MainMemory men, Process proc) {
         MainMemory memory = men;
         Page nextPage = pages.peek();
-        while(secondChanceFlag.get(nextPage) || nextPage.getOwner().getPriority() < proc.getPriority()){
+        /*while(secondChanceFlag.get(nextPage) || nextPage.getOwner().getPriority() < proc.getPriority()){
             //System.out.println("p: " + nextPage);
             //lost second chance
             if(nextPage.getOwner().getPriority() < proc.getPriority()){
@@ -43,7 +43,22 @@ public class SecondChance implements ReplacementPolicy, Observer<Page>{
             }
             pages.add(pages.remove());
             nextPage = pages.peek();
+        }*/
+        while(nextPage != null && secondChanceFlag.get(nextPage)){
+                //System.out.println("p: " + nextPage);
+                //lost second chance
+                
+                
+                if(nextPage.getOwner().getPriority() >= proc.getPriority()){
+                    secondChanceFlag.put(nextPage, Boolean.FALSE);    
+                }
+                pages.add(pages.remove());
+                nextPage = pages.peek();
+                
+                
+                
         }
+        
         pages.remove();
         //System.out.println(nextPage);
         

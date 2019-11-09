@@ -442,7 +442,7 @@ public class ManejoDeMemoria extends PApplet {
         builder.setMemory(memorySize);
         builder.setStore(backingStoreSize);
         //!ATTENTION must get prepagin value from memory
-        builder.setPrepaging(2);
+        builder.setPrepaging(3);
         
         builder.setPrecleaning(CleaningPolicyPicker.getSelectedIndex() == 1);
         

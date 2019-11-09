@@ -21,7 +21,8 @@ public class Process {
     int totalPages;
     private int r, g, b;
     private Random rand = new Random();
-    
+    int pageSize;
+
 
     public Process(int id, FetchList fetchlist, int memory,int pageSize, int priority,BackingStore store, int totalPages) {
         this.id = id;
@@ -29,6 +30,7 @@ public class Process {
         this.pages = new Page[(int)Math.ceil((float)memory/pageSize)];
         this.priority = priority;
         this.totalPages = totalPages;
+        
         
         for (int i = 0; i < this.pages.length; i++) {
            this.pages[i] = store.allocatePage(this, i); // storing random integers in an array
@@ -42,6 +44,7 @@ public class Process {
         
         //create new memory table
         this.memoryTable = new MemoryTable(this.pages);
+        this.pageSize = pageSize;
     }
     
     public Process(int id, int memory, int pageSize, int priority, BackingStore store, int totalPages) {
@@ -63,6 +66,7 @@ public class Process {
         
         //create new memory table
         this.memoryTable = new MemoryTable(this.pages);
+        this.pageSize = pageSize;
     }
 
     public int getPriority() {
@@ -114,7 +118,9 @@ public class Process {
     }
     
     public int getNext(){
-        return fetchlist.getNext();
+        int next = fetchlist.getNext();
+        if(next > 0) next = next/pageSize;
+        return next;
     }
     
     public boolean hasFinished(){

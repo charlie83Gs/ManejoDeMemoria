@@ -102,6 +102,7 @@ public class ManejoDeMemoria extends PApplet {
     public void setup() {
         colorMode(RGB);
         this.createWindows();
+        
         this.cancelarBtn.setVisible(false);
         //initialize items
         configButt = new GButton(this, 10, this.height - 40, 85, 30, "Configuración");
@@ -127,12 +128,12 @@ public class ManejoDeMemoria extends PApplet {
         this.helpFullSimulation = new GButton(this, this.width - 30, this.height - 50, 30, 20, "18?");
         this.setVisibility(false);
        
-        errWindow = GWindow.getWindow(this, "", 750, 400, 300, 150, JAVA2D);
+        errWindow = GWindow.getWindow(this, "", 750, 400, 500, 500, JAVA2D);
         errWindow.setActionOnClose(GWindow.KEEP_OPEN);
         errWindow.setVisible(false);
         new GButton(this.errWindow, this.errWindow.width - 45, this.errWindow.height - 30, 40, 25, "Ok");
     
-        errWindowLbl = new GTextArea(errWindow, 0, 0, 300, 150);
+        errWindowLbl = new GTextArea(errWindow, 0, 0, 500, 500);
         errWindowLbl.setEnabled(false);
         
         manualWindow = GWindow.getWindow(this, "Manual de usuario", 600, 100, 700, 800, JAVA2D);
@@ -142,6 +143,8 @@ public class ManejoDeMemoria extends PApplet {
     
         infoManual = new GTextArea(manualWindow, 0, 0, 700, 800);
         infoManual.setEnabled(false);
+        
+        
         
     }
     
@@ -182,6 +185,9 @@ public class ManejoDeMemoria extends PApplet {
                             this.sim.updateOnMemoryList(this.multiprogramming);
                         }
                     }
+                    this.estadisticInfo.setText("Page-faults: " + this.sim.getPageFaults() + "\n"
+                                                + "Hits: " + this.sim.getPageHits());
+                    
                 }
                 else{
                     this.showPopUpErr("Error", "El proceso a ejecutar no está cargado en memoria o el numero de iteraciones no > 0");
@@ -189,6 +195,8 @@ public class ManejoDeMemoria extends PApplet {
                 break;
             case "Full simulation":
                 sim = TestSimulation.TestFullSteps(sim, sim.getOnMemory().size());
+                this.estadisticInfo.setText("Page-faults: " + this.sim.getPageFaults() + "\n"
+                                                + "Hits: " + this.sim.getPageHits());
                 break;
             case "Guardar":
                 if(false/*this.processPath.equals("") || this.fetchListPath.equals("")*/){
@@ -216,6 +224,7 @@ public class ManejoDeMemoria extends PApplet {
                 break;
             case "Resetear":
                 this.disp = 20;
+                this.estadisticInfo.setText("");
                 this.setUpSim();
                 break;
             case "Manual de usuario":
@@ -423,7 +432,7 @@ public class ManejoDeMemoria extends PApplet {
     
     
     public void createWindows() {
-        window = GWindow.getWindow(this, "Confirugation", 750, 200, 450, 550, JAVA2D);
+        window = GWindow.getWindow(this, "Configuración", 750, 200, 450, 550, JAVA2D);
         window.addDrawHandler(this, "config_draw");
         window.setActionOnClose(GWindow.KEEP_OPEN);
         
@@ -583,17 +592,21 @@ public class ManejoDeMemoria extends PApplet {
     public void handleTextEvents(GEditableTextControl textcontrol, GEvent event) { /* code */ }
     
     //---------------------------------Strings de ayuda
-    String HfetchPolicy = "Fetch policy dice cómo es que se van a escoger las paginas durante la ejecución:\n" +
+    String HfetchPolicy = "Fetch policy indica cómo es que se van a escoger las paginas durante la ejecución:\n" +
 "	demanda: carga la pagina por petición\n" +
 "	prepagin: carga varias paginas a la vez por petición",
             
            HplacementPolicy = "",
             
-           HreplacementPolicy = "",
+           HreplacementPolicy = "Indica el tipo de algoritmo a utilizar cuando hay page-fault",
             
            HresidentSet = "",
             
-           HreplacementScope = "",
+           HreplacementScope = "A la hora de que ocurre un page fault hay dos opciones para reemplazar la página\n" +
+"   local: sólo se puede reemplazar una página que pertenezca al proceso que está generando el request\n" +
+"   global: se puede reemplazar una página de cuálquier proceso\n" +
+"lo anterior partiendo del hecho de que la página a reemplazar será indicada por el\n" +
+"algoritmo de replacement seleccionado",
             
            Hcleaningpolicy = "",
             
